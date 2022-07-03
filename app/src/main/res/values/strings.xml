@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">MY_RECIPE</string>
+    <string name="app_name_1">MY</string>
+    <string name="app_name_2">RECIPE</string>
+    <string name="login">LOGIN</string>
+    <string name="id">ID</string>
+    <string name="pw">PW</string>
+    <string name="login_ok">GO</string>
+    <string name="join">JOIN</string>
+</resources>
