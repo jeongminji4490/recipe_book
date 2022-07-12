@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -58,35 +59,47 @@ class LoginFragment : Fragment() {
             setContent {
                 MaterialTheme {
                     auth = Firebase.auth
-                    loginView(onNavigate = { dest -> findNavController().navigate(dest) })
+                    loginView()
                 }
             }
         }
     }
 
     @Composable
-    fun loginView( onNavigate: (Int) -> Unit ) {
+    fun loginView() {
+        Scaffold(
+            modifier = Modifier
+                .fillMaxSize(),
+            content = {
+                mainContent(onNavigate = { dest -> findNavController().navigate(dest) }) },
+            backgroundColor = Color.Black
+        )
+    }
+
+    @Composable
+    fun mainContent(onNavigate: (Int) -> Unit){
         var id by remember { mutableStateOf("") }
         var pw by remember { mutableStateOf("") }
         var progressState by remember { mutableStateOf(0) }
+
         Column(modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .padding(20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally) {
+            .padding(20.dp), // Column 안에서 백그라운드 색 설정하면 스캐폴드에서 지정한 배경색 적용 X
+            horizontalAlignment = Alignment.CenterHorizontally) {
             Spacer(modifier = Modifier.height(40.dp))
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = "MY",
                 textAlign = TextAlign.Center,
-                color = Color.Black,
+                color = Color.White,
                 fontSize = 40.sp,
                 fontWeight = FontWeight.Bold)
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = "RECIPE",
                 textAlign = TextAlign.Center,
-                color = Color.Black,
+                color = Color.White,
                 fontSize = 40.sp,
                 fontWeight = FontWeight.Bold)
             GlideImage(
@@ -96,23 +109,27 @@ class LoginFragment : Fragment() {
                     .width(210.dp)
             )
             OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth(),
                 value = id,
                 onValueChange = { id = it },
-                label = { Text("ID") },
+                label = { Text("ID", color = Color.White ) },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color.Magenta,
-                    unfocusedBorderColor = Color.Black
+                    textColor = Color.White,
+                    focusedBorderColor = colorResource(R.color.mint),
+                    unfocusedBorderColor = Color.White
                 )
             )
             OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth(),
                 value = pw,
                 onValueChange = { pw = it },
-                label = { Text(text = "Password") },
+                label = { Text(text = "Password", color = Color.White ) },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color.Magenta,
-                    unfocusedBorderColor = Color.Black
+                    textColor = Color.White,
+                    focusedBorderColor = colorResource(R.color.mint),
+                    unfocusedBorderColor = Color.White
                 ),
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
@@ -120,13 +137,15 @@ class LoginFragment : Fragment() {
             Spacer(modifier = Modifier.height(10.dp))
             Button( // 로그인
                 onClick = {
-                    //login(id, pw)
                     if (id.isNotEmpty() && pw.isNotEmpty()){
                         progressState = 1
                         auth?.signInWithEmailAndPassword(id, pw)
                             ?.addOnCompleteListener { task ->
                                 if (task.isSuccessful){
-                                    Toast.makeText(requireContext(), "로그인 완료", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "로그인 완료",
+                                        Toast.LENGTH_SHORT).show()
                                     findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
                                 }else {
                                     progressState = 0
@@ -135,28 +154,37 @@ class LoginFragment : Fragment() {
                                     }catch (e : FirebaseAuthInvalidUserException){
                                         Toast.makeText(requireContext(), "존재하지 않는 회원입니다.", Toast.LENGTH_SHORT).show()
                                     }catch (e: FirebaseAuthInvalidCredentialsException){
-                                        Toast.makeText(requireContext(), "잘못된 이메일 형식입니다.", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(requireContext(), "이메일 또는 비밀번호가 잘못되었습니다.", Toast.LENGTH_SHORT).show()
                                     }catch (e: FirebaseAuthException){
                                         Toast.makeText(requireContext(), e.errorCode, Toast.LENGTH_SHORT).show()
                                     }
                                 }
                             }
+                    }else {
+                        Toast.makeText(
+                            requireContext(),
+                            "아이디 또는 비밀번호를 입력해주세요",
+                            Toast.LENGTH_SHORT).show()
                     } },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(60.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black, contentColor = Color.White)
+                    .height(50.dp),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color.Black,
+                    contentColor = colorResource(R.color.mint))
             ){
                 Text("LOGIN")
             }
             Spacer(modifier = Modifier.height(10.dp))
             Button( // 회원가입
-                onClick = { onNavigate(R.id.action_loginFragment_to_joinFragment) },
+                onClick = { onNavigate(R.id.action_loginFragment_to_mainFragment) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(60.dp),
+                    .height(50.dp),
                 elevation = null,
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.White.copy(alpha = 0.5f), contentColor = Color.Black)
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color.Black,
+                    contentColor = Color.White)
             ) {
                 Text(text = "JOIN")
             }
@@ -164,32 +192,18 @@ class LoginFragment : Fragment() {
             if (progressState == 1){
                 CircularProgressIndicator(
                     modifier = Modifier.padding(16.dp),
-                    color = colorResource(id = R.color.red),
+                    color = colorResource(R.color.mint),
                     strokeWidth = Dp(value = 4F)
                 )
             }
         }
     }
 
-    private fun login(email: String, passWord: String){
-        if (email.isNotEmpty() && passWord.isNotEmpty()){
-            auth?.signInWithEmailAndPassword(email, passWord)
-                ?.addOnCompleteListener { task ->
-                    if (task.isSuccessful){
-                        Toast.makeText(requireContext(), "로그인 완료", Toast.LENGTH_SHORT).show()
-                        findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
-                    }else {
-                        try{
-                            throw task.exception!!
-                        }catch (e : FirebaseAuthInvalidUserException){
-                            Toast.makeText(requireContext(), "존재하지 않는 회원입니다.", Toast.LENGTH_SHORT).show()
-                        }catch (e: FirebaseAuthInvalidCredentialsException){
-                            Toast.makeText(requireContext(), "잘못된 이메일 형식입니다.", Toast.LENGTH_SHORT).show()
-                        }catch (e: FirebaseAuthException){
-                            Toast.makeText(requireContext(), e.errorCode, Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
+    override fun onStart() { // 자동 로그인
+        super.onStart()
+        val currentUser = auth?.currentUser
+        if (currentUser != null){
+            findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
         }
     }
 

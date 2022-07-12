@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -43,14 +44,25 @@ class JoinFragment : Fragment() {
             setContent {
                 MaterialTheme {
                     auth = Firebase.auth
-                    joinView(onNavigate = { dest -> findNavController().navigate(dest) })
+                    joinView()
                 }
             }
         }
     }
 
     @Composable
-    fun joinView(onNavigate: (Int) -> Unit){
+    fun joinView(){
+        Scaffold(
+            modifier = Modifier
+                .fillMaxSize(),
+            content = {
+                mainContent(onNavigate = { dest -> findNavController().navigate(dest) }) },
+            backgroundColor = Color.Black
+        )
+    }
+
+    @Composable
+    fun mainContent(onNavigate: (Int) -> Unit){
         var email by remember { mutableStateOf("") }
         var pw by remember { mutableStateOf("") }
         var confirmPw by remember { mutableStateOf("") }
@@ -66,7 +78,7 @@ class JoinFragment : Fragment() {
                 modifier = Modifier.fillMaxWidth(),
                 text = "JOIN",
                 textAlign = TextAlign.Left,
-                color = Color.Black,
+                color = Color.White,
                 fontSize = 40.sp,
                 fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(40.dp))
@@ -74,20 +86,22 @@ class JoinFragment : Fragment() {
                 modifier = Modifier.fillMaxWidth(),
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email") },
+                label = { Text("Email", color = Color.White) },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color.Green,
-                    unfocusedBorderColor = Color.Black
+                    textColor = Color.White,
+                    focusedBorderColor = colorResource(R.color.crimsonRed),
+                    unfocusedBorderColor = Color.White
                 )
             )
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = pw,
                 onValueChange = { pw = it },
-                label = { Text("Password") },
+                label = { Text("Password", color = Color.White) },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color.Green,
-                    unfocusedBorderColor = Color.Black
+                    textColor = Color.White,
+                    focusedBorderColor = colorResource(R.color.crimsonRed),
+                    unfocusedBorderColor = Color.White
                 ),
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
@@ -96,10 +110,11 @@ class JoinFragment : Fragment() {
                 modifier = Modifier.fillMaxWidth(),
                 value = confirmPw,
                 onValueChange = { confirmPw = it },
-                label = { Text("confirm Password") },
+                label = { Text("confirm Password", color = Color.White) },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color.Green,
-                    unfocusedBorderColor = Color.Black
+                    textColor = Color.White,
+                    focusedBorderColor = colorResource(R.color.crimsonRed),
+                    unfocusedBorderColor = Color.White
                 ),
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
@@ -110,7 +125,9 @@ class JoinFragment : Fragment() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black, contentColor = Color.White)
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color.Black,
+                    contentColor =  colorResource(R.color.crimsonRed))
             ) {
                 Text(text = "OK")
             }
@@ -121,7 +138,9 @@ class JoinFragment : Fragment() {
                     .fillMaxWidth()
                     .height(60.dp),
                 elevation = null,
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.White.copy(alpha = 0.5f), contentColor = Color.Black)
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color.Black,
+                    contentColor = Color.White)
             ) {
                 Text(text = "CANCEL")
             }
@@ -176,6 +195,6 @@ class JoinFragment : Fragment() {
     }
 
     companion object{
-        const val TAG = "FIRESTORE"
+        const val TAG = "FIRE_STORE"
     }
 }
