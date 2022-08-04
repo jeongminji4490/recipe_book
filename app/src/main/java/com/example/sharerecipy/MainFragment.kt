@@ -51,225 +51,189 @@ class MainFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                auth = Firebase.auth
-                mainView(onNavigate = { dest -> findNavController().navigate(dest) })
+                MainView()
             }
         }
     }
 
     @Composable
-    fun mainView(onNavigate: (Int) -> Unit) {
+    fun MainView() {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(text = "")
+                    },
+                    navigationIcon = { // 로그아웃 버튼(로그아웃 확인 다이얼로그?)
+                        IconButton(onClick = { logout() }) {
+                            Icon(Icons.Filled.ExitToApp,"")
+                        }
+                    },
+                    backgroundColor = Color.Black,
+                    contentColor = Color.White
+                )
+            },
+            content = {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(it)
+                ) { }
+                MainContent(onNavigate = { dest -> findNavController().navigate(dest) }) },
+            backgroundColor = Color.White,
+        )
+    }
+
+    @Composable
+    fun MainContent(onNavigate: (Int) -> Unit) {
+        auth = Firebase.auth
         val db = Firebase.firestore
         val currentUser = auth.currentUser // 로그인한 사용자
         var email = "" // 이메일
         var nickname by remember { mutableStateOf("") } // 닉네임
-        currentUser?.let { info ->
-            email = info.email.toString() // 사용자 이메일 가져오기
+
+        currentUser?.let { user ->
+            email = user.email.toString() // 사용자 이메일 가져오기
         }
-        val docRef = db.collection("user").document(email)
+        val docRef = db.collection("user").document(email) // user 컬렉션에서 email 에 해당하는 document 가져오기
         docRef.get()
             .addOnSuccessListener { document ->
                 if (document != null) {
-                    nickname = run {
-                        document.data?.get("nickname").toString() // 사용자 닉네임 가져오기
-                    }
-                    Log.d("Main", "DocumentSnapshot data: ${document.data?.get("nickname")}")
+                    nickname = document.data?.get("nickname").toString() // 사용자 닉네임 가져오기
                 } else {
-                    Log.d("Main", "No such document")
+                    Log.d("Main_MainView", "No such document")
+                }
+            }.addOnFailureListener { exception ->
+                Log.d("Main_MainView", "get failed with ", exception)
+            }
+        Column {
+            Card( // 회원 정보
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(15.dp)
+                    .clickable { },
+                elevation = 10.dp
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(15.dp)
+                ) {
+                    Text( // 이메일
+                        modifier = Modifier.fillMaxWidth(),
+                        text = email,
+                        textAlign = TextAlign.Left,
+                        color = Color.Black,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text( // 닉네임(추후 수정 가능하도록)
+                        modifier = Modifier.fillMaxWidth(),
+                        text = nickname,
+                        textAlign = TextAlign.Left,
+                        color = Color.Black,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                    ) {
+                        OutlinedButton( // 정보수정
+                            onClick = { },
+                            modifier = Modifier
+                                .height(40.dp),
+                            border = BorderStroke(1.dp, Color.Black),
+                            shape = RoundedCornerShape(50),
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Black)
+                        ) {
+                            Text(text = "정보수정")
+                        }
+                        OutlinedButton(
+                            // 찜한 레시피 목록
+                            onClick = { },
+                            modifier = Modifier
+                                .height(40.dp),
+                            shape = RoundedCornerShape(50),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = Color.Black,
+                                contentColor = Color.White
+                            ),
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Favorite,
+                                modifier = Modifier.padding(end = 8.dp),
+                                contentDescription = "favorite",
+                                tint = Color.Red
+                            )
+                            Text(text = "찜목록")
+                        }
+                    }
                 }
             }
-            .addOnFailureListener { exception ->
-                Log.d("Main", "get failed with ", exception)
-            }
-            Scaffold(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .fillMaxHeight(),
-                topBar = {
-                    TopAppBar(
-                        title = {
-                            Text(text = "")
-                        },
-                        navigationIcon = {
-                            IconButton(onClick = { logout() }) {
-                                Icon(Icons.Filled.ExitToApp,"")
-                            }
-                        },
-                        backgroundColor = Color.Black,
-                        contentColor = Color.White
-                    )
-                }, content = {
-                    Column {
-                        Card (
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(15.dp)
-                                .clickable { },
-                            elevation = 10.dp
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .padding(15.dp)
-                            ){
-                                Text(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    text = email,
-                                    textAlign = TextAlign.Left,
-                                    color = Color.Black,
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Text(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    text = nickname,
-                                    textAlign = TextAlign.Left,
-                                    color = Color.Black,
-                                    fontSize = 15.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Spacer(modifier = Modifier.height(10.dp))
-                                Row (
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(8.dp)
-                                ) {
-                                    OutlinedButton( // 정보수정
-                                        onClick = {  },
-                                        modifier = Modifier
-                                            .height(40.dp),
-                                        border = BorderStroke(1.dp, Color.Black),
-                                        shape = RoundedCornerShape(50),
-                                        colors = ButtonDefaults.outlinedButtonColors( contentColor = Color.Black )
-                                    ) {
-                                        Text(text = "정보수정")
-                                    }
-                                    OutlinedButton(
-                                        // 정보수정
-                                        onClick = { },
-                                        modifier = Modifier
-                                            .height(40.dp),
-                                        //border = BorderStroke(1.dp, Color.Black),
-                                        shape = RoundedCornerShape(50),
-                                        colors = ButtonDefaults.buttonColors(
-                                            backgroundColor = Color.Black,
-                                            contentColor = Color.White
-                                        ),
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Favorite ,
-                                            modifier = Modifier.padding(end = 8.dp),
-                                            contentDescription = "favorite",
-                                            tint = Color.Red
-                                        )
-                                        Text(text = "찜목록")
-                                    }
-                                }
-                            }
-                        }
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(15.dp)
-                                .clickable { onNavigate(R.id.action_mainFragment_to_recipeListFragment) },
-                            backgroundColor = colorResource(R.color.deepPink),
-                            elevation = 10.dp,
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .padding(15.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Image(
-                                    painterResource(R.drawable.book),
-                                    contentDescription = ""
-                                )
-                                Text(
-                                    text = "레시피 보기",
-                                    modifier = Modifier.fillMaxWidth(),
-                                    color = Color.White,
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
-                        }
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(15.dp),
-                            backgroundColor = colorResource(R.color.babyNavy),
-                            elevation = 10.dp
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .padding(15.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Image(
-                                    painterResource(R.drawable.recipes),
-                                    contentDescription = ""
-                                )
-                                Text(
-                                    text = "내 레시피",
-                                    modifier = Modifier.align(alignment = Alignment.CenterVertically),
-                                    //textAlign = TextAlign.Center,
-                                    color = Color.White,
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
-                        }
-                    }
-//                    LazyColumn{
-//                        itemsIndexed(
-//                            listOf("apple", "banana", "grape")
-//                        ){ index, item ->
-//                            recipeCards(item)
-//                        }
-//                    }
-                })
-    }
-
-    @Composable
-    fun showList(){
-        LazyColumn{
-            itemsIndexed(
-                listOf("apple", "banana", "grape")
-            ){ index, item ->  
-                recipeCards(item)
-            }
-        }
-    }
-
-    @Composable
-    fun recipeCards(title: String){
-        Card (
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(15.dp)
-                .clickable { },
-            elevation = 10.dp
-        ) {
-            Column(
+            Card( // 레시피 보기
                 modifier = Modifier
+                    .fillMaxWidth()
                     .padding(15.dp)
+                    .clickable {  },
+                backgroundColor = Color.Black,
+                elevation = 10.dp,
+                shape = RoundedCornerShape(10.dp)
             ) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = title,
-                    textAlign = TextAlign.Left,
-                    color = Color.Black,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                Row(
+                    modifier = Modifier
+                        .padding(15.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painterResource(R.drawable.cook),
+                        contentDescription = ""
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        text = "레시피 보기",
+                        modifier = Modifier.fillMaxWidth(),
+                        color = Color.White,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+            Card( // 내 레시피
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(15.dp),
+                backgroundColor = Color.Black,
+                elevation = 10.dp,
+                shape = RoundedCornerShape(10.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .padding(15.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painterResource(R.drawable.recipe),
+                        contentDescription = ""
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        text = "내 레시피",
+                        modifier = Modifier.align(alignment = Alignment.CenterVertically),
+                        color = Color.White,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
     }
 
-    private fun logout(){
+    private fun logout(){ // 로그아웃
         auth.signOut()
-        findNavController().navigate(R.id.action_mainFragment_to_loginFragment)
+        //findNavController().navigate()
         Toast.makeText(requireContext(), "logout", Toast.LENGTH_SHORT).show()
     }
-
 }

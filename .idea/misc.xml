@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/hamin/AndroidStudioProjects/ShareRecipy/app/src/main/res/drawable/ic_visibility_off.xml" value="0.1" />
+        <entry key="..\:/Users/hamin/AndroidStudioProjects/ShareRecipy/app/src/main/res/drawable/ic_visibility_on.xml" value="0.1835" />
         <entry key="..\:/Users/hamin/AndroidStudioProjects/ShareRecipy/app/src/main/res/drawable/rounded_rectangle_shape.xml" value="0.17" />
         <entry key="..\:/Users/hamin/AndroidStudioProjects/ShareRecipy/app/src/main/res/layout/activity_main.xml" value="0.21784420289855072" />
         <entry key="..\:/Users/hamin/AndroidStudioProjects/ShareRecipy/app/src/main/res/layout/fragment_login.xml" value="0.21784420289855072" />

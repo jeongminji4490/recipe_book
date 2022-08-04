@@ -1,10 +1,30 @@
 <resources>
+    <string name="login_ok">GO</string>
+
+    <!-- Common -->
     <string name="app_name">MY_RECIPE</string>
     <string name="app_name_1">MY</string>
     <string name="app_name_2">RECIPE</string>
-    <string name="login">LOGIN</string>
-    <string name="id">ID</string>
-    <string name="pw">PW</string>
-    <string name="login_ok">GO</string>
-    <string name="join">JOIN</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+
+    <string name="repeat_password">Repeat password</string>
+    <string name="generic_error">Something wrong happened. Please try again.</string>
+    <string name="email_error">Please insert a valid email.</string>
+
+    <!-- LoginScreen -->
+    <string name="sign_in">Sign in</string>
+    <string name="login_details">Enter your login details</string>
+    <string name="forgot_password">Forgot password? Click to get recovery email</string>
+    <string name="recovery_email_sent">Check your inbox for the recovery email.</string>
+    <string name="empty_password_error">Password cannot be empty.</string>
+
+    <!-- SignUpScreen -->
+    <string name="create_account">Create account</string>
+    <string name="cancel">Cancel</string>
+    <string name="sign_up">Sign up</string>
+    <string name="confirm_password">Confirm password</string>
+
+    <string name="password_error">Your password should have at least six digits and include one digit, one lower case letter and one upper case letter.</string>
+    <string name="password_match_error">Passwords do not match.</string>
 </resources>
