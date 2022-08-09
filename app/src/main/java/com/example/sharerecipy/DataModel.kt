@@ -4,7 +4,8 @@ import com.google.gson.annotations.SerializedName
 import java.net.URL
 
 data class RecipeList(
-    @SerializedName("COOKRCP01") val list : RecipeDto
+    @SerializedName("COOKRCP01")
+    val list : RecipeDto
 )
 
 data class RecipeDto(
@@ -33,11 +34,11 @@ data class RecipeInfo(
     @SerializedName("RCP_SEQ") val id : Int,
     @SerializedName("RCP_NM") val name : String,
     @SerializedName("MANUAL01") val manual1: String,
-    @SerializedName("MANUAL_IMG01") val manual1_img: String
-//    @SerializedName("MANUAL02") val manual2: String,
-//    @SerializedName("MANUAL_IMG02") val manual2_img: URL,
-//    @SerializedName("MANUAL03") val manual3: String,
-//    @SerializedName("MANUAL_IMG03") val manual3_img: URL,
+    @SerializedName("MANUAL_IMG01") val manual1_img: String,
+    @SerializedName("MANUAL02") val manual2: String,
+    @SerializedName("MANUAL_IMG02") val manual2_img: String,
+    @SerializedName("MANUAL03") val manual3: String,
+    @SerializedName("MANUAL_IMG03") val manual3_img: String,
 //    @SerializedName("MANUAL04") val manual4: String,
 //    @SerializedName("MANUAL_IMG04") val manual4_img: URL,
 //    @SerializedName("MANUAL05") val manual5: String,

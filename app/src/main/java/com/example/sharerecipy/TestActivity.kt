@@ -11,10 +11,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.sharerecipy.screens.home.HomeScreen
+import com.example.sharerecipy.screens.home.HomeViewModel
 import com.example.sharerecipy.screens.login.LoginScreen
 import com.example.sharerecipy.screens.login.LoginViewModel
+import com.example.sharerecipy.screens.recipe.RecipeDetailScreen
+import com.example.sharerecipy.screens.recipe.RecipeScreen
+import com.example.sharerecipy.screens.recipe.ViewModel
 import com.example.sharerecipy.screens.signup.SignUpScreen
 import com.example.sharerecipy.screens.signup.SignUpViewModel
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.log
 
@@ -27,12 +33,18 @@ class TestActivity : AppCompatActivity() {
             val navController = rememberNavController()
             val loginViewModel = hiltViewModel<LoginViewModel>()
             val signUpViewModel = hiltViewModel<SignUpViewModel>()
+            val homeViewModel = hiltViewModel<HomeViewModel>()
+            val recipeViewModel = hiltViewModel<ViewModel>()
+            val dataStore = DataStoreModule
             val appState = TestAppState(navController)
             MaterialTheme {
                 NavigationComponent(
                     navController,
                     loginViewModel,
                     signUpViewModel,
+                    homeViewModel,
+                    recipeViewModel,
+                    dataStore,
                     appState
                 )
             }
@@ -44,28 +56,44 @@ class TestActivity : AppCompatActivity() {
         navController: NavHostController,
         loginViewModel: LoginViewModel,
         signUpViewModel: SignUpViewModel,
+        homeViewModel: HomeViewModel,
+        recipeViewModel: ViewModel,
+        dataStore: DataStoreModule,
         appState: TestAppState
     ) {
         NavHost(
             navController = navController,
-            startDestination = "login"
+            startDestination = LOGIN_SCREEN
         ){
-            composable("login") {
+            composable(LOGIN_SCREEN) {
                 LoginScreen(
-                    navController,
                     loginViewModel,
                     openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) }
                 )
             }
-            composable("sign_up") {
+            composable(SIGNUP_SCREEN) {
                 SignUpScreen(
-                    navController,
                     signUpViewModel,
                     openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) }
                 )
             }
-            composable("home") {
-                HomeScreen(navController)
+            composable(HOME_SCREEN) {
+                HomeScreen(
+                    homeViewModel,
+                    openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) }
+                )
+            }
+            composable(RECIPE_SCREEN) {
+                RecipeScreen(
+                    recipeViewModel,
+                    openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) }
+                )
+            }
+            composable(RECIPE_DETAIL_SCREEN){
+                RecipeDetailScreen(
+                    recipeViewModel,
+                    openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) }
+                )
             }
         }
     }

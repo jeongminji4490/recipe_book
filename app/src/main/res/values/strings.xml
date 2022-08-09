@@ -3,28 +3,56 @@
 
     <!-- Common -->
     <string name="app_name">MY_RECIPE</string>
+    <string name="app_name_version_2">My Recipe</string>
     <string name="app_name_1">MY</string>
     <string name="app_name_2">RECIPE</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="OK">확인</string>
+    <string name="CANCEL">취소</string>
 
     <string name="repeat_password">Repeat password</string>
     <string name="generic_error">Something wrong happened. Please try again.</string>
     <string name="email_error">Please insert a valid email.</string>
 
     <!-- LoginScreen -->
-    <string name="sign_in">Sign in</string>
+    <string name="sign_in">Login</string>
     <string name="login_details">Enter your login details</string>
     <string name="forgot_password">Forgot password? Click to get recovery email</string>
     <string name="recovery_email_sent">Check your inbox for the recovery email.</string>
     <string name="empty_password_error">Password cannot be empty.</string>
+    <string name="non_existent_member">존재하지 않는 회원입니다</string>
+    <string name="wrong_format">이메일 또는 비밀번호가 잘못되었습니다</string>
+    <string name="empty_id_or_pw">이메일 또는 비밀번호를 입력해주세요</string>
 
     <!-- SignUpScreen -->
     <string name="create_account">Create account</string>
     <string name="cancel">Cancel</string>
     <string name="sign_up">Sign up</string>
+    <string name="name">Name</string>
     <string name="confirm_password">Confirm password</string>
-
-    <string name="password_error">Your password should have at least six digits and include one digit, one lower case letter and one upper case letter.</string>
-    <string name="password_match_error">Passwords do not match.</string>
+    <string name="password_error">비밀번호는 최소 6자리 이상이어야 합니다</string>
+    <string name="password_match_error">비밀번호가 일치하지 않습니다</string>
+    <string name="already_exist_email">이미 존재하는 아이디입니다</string>
+    <string name="invalid_email">유효하지 않은 이메일 형식입니다</string>
+    <string name="fill_in_all_fields">모든 입력란을 채워주세요</string>
+    <string name="complete_creation">계정이 생성되었습니다. 다시 로그인해주세요.</string>
+    
+    <!--HomeScreen -->
+    <string name="modify_info">정보 수정</string>
+    <string name="withdrawal">회원 탈퇴</string>
+    <string name="withdrawal_dialog">회원 탈퇴를 원하시면 확인을 눌러주세요(확인을 누르면 계정 복구가 불가능합니다).</string>
+    <string name="wish_list">찜목록</string>
+    <string name="show_recipe">레시피 보기</string>
+    <string name="my_recipe">내 레시피</string>
+    <string name="logout">Logout</string>
+    
+    <!--RecipeScreen -->
+    <string name="ingredients">재료</string>
+    <string name="how_to_cook">방법</string>
+    
+    <!-- FireStore -->
+    <string name="no_such_document">No such document</string>
+    <string name="get_failed_with">get failed with</string>
+    
 </resources>

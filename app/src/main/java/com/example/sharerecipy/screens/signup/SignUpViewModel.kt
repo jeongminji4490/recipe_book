@@ -14,10 +14,12 @@ class SignUpViewModel @Inject constructor(
     // 계정 생성
     fun createAccount(
         email: String,
+        name: String,
         password: String,
         confirmPw: String,
         context: Context,
         openAndPopUp: (String, String) -> Unit) {
-        accountService.createAccount(email, password, confirmPw, context, openAndPopUp)
+        accountService.createAccount(email, name, password, confirmPw, context, openAndPopUp)
     }
+
 }
