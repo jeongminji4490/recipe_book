@@ -17,15 +17,13 @@ class ViewModel @Inject constructor(
     ) : ViewModel() {
 
     var list : MutableLiveData<RecipeList> = MutableLiveData()
-    //var infos : MutableLiveData<RecipeInfoList> = MutableLiveData()
     var infos : MutableLiveData<RecipeInfo> = MutableLiveData()
 
-    // 이걸 굳이 한꺼번에 초기화해야할까?
     init {
-        repo.getRecipes()
-        //repo.getRecipeInfo()
-        list = repo.list
-        //infos = repo.infos
+        viewModelScope.launch { // 초기화 시 더 빨리 불러올 수 있음
+            repo.getRecipes()
+            list = repo.list
+        }
     }
 
     fun getInfoTest(){
@@ -36,7 +34,6 @@ class ViewModel @Inject constructor(
         }
     }
 
-    // datastore
     fun setRecipeName(name: String, openAndPopUp: (String, String) -> Unit) {
         viewModelScope.launch {
             dataStore.setRecipeName(name)

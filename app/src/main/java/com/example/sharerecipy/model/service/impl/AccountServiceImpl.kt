@@ -110,13 +110,23 @@ class AccountServiceImpl @Inject constructor() : AccountService {
 
     // 회원 탈퇴
     override fun deleteAccount(context: Context, openAndPopUp: (String, String) -> Unit) {
-        Firebase.auth.currentUser!!.delete()
-            .addOnCompleteListener {
-                Toast.makeText(context, AppText.withdrawal, Toast.LENGTH_SHORT).show()
-                openAndPopUp(LOGIN_SCREEN, HOME_SCREEN)
-            }
+        val currentUser = Firebase.auth.currentUser
+        val email = currentUser?.email
+        if (email != null){
+            Firebase.auth.currentUser!!.delete()
+                .addOnCompleteListener {
+                    val db = Firebase.firestore
+                    db.collection("user").document(email) // 관련 정보 삭제
+                        .delete()
+                        .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully deleted!") }
+                        .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
+                    Toast.makeText(context, AppText.withdrawal, Toast.LENGTH_SHORT).show()
+                    openAndPopUp(LOGIN_SCREEN, HOME_SCREEN)
+                }
+        }
     }
 
+    // 로그아웃
     override fun signOut(context: Context, openAndPopUp: (String, String) -> Unit) { // 메인화면으로 이동
         Firebase.auth.signOut()
         Toast.makeText(context, AppText.logout, Toast.LENGTH_SHORT).show()

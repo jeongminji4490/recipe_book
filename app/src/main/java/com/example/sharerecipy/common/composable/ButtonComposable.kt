@@ -91,6 +91,8 @@ fun BasicOutlinedButton(
 @Composable
 fun IconOutlinedButton(
     @StringRes text: Int,
+    @ColorRes backgroundColor: Int,
+    @ColorRes contentColor: Int,
     icon: ImageVector,
     description: String,
     modifier: Modifier,
@@ -100,8 +102,8 @@ fun IconOutlinedButton(
         modifier = modifier,
         shape = RoundedCornerShape(50),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = colorResource(R.color.lightOrange),
-            contentColor = Color.White
+            backgroundColor = colorResource(backgroundColor),
+            contentColor = colorResource(contentColor)
         ),
     ) {
         Text(
@@ -136,20 +138,20 @@ fun DialogConfirmButton(
     }
 }
 
-@Composable
-fun DialogCancelButton(
-    @StringRes text: Int,
-    action: () -> Unit,
-    @ColorRes backgroundColor: Int,
-    @ColorRes contentColor: Int
-) {
-    Button(
-        onClick = action,
-        colors = ButtonDefaults.buttonColors(
-            backgroundColor = colorResource(backgroundColor),
-            contentColor = colorResource(contentColor)
-        )
-    ) {
-        Text(text = stringResource(text))
-    }
-}
+//@Composable
+//fun DialogCancelButton(
+//    @StringRes text: Int,
+//    action: () -> Unit,
+//    @ColorRes backgroundColor: Int,
+//    @ColorRes contentColor: Int
+//) {
+//    Button(
+//        onClick = action,
+//        colors = ButtonDefaults.buttonColors(
+//            backgroundColor = colorResource(backgroundColor),
+//            contentColor = colorResource(contentColor)
+//        )
+//    ) {
+//        Text(text = stringResource(text))
+//    }
+//}

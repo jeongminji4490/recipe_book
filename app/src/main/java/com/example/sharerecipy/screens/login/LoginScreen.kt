@@ -1,5 +1,7 @@
 package com.example.sharerecipy.screens.login
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -21,6 +23,7 @@ import com.skydoves.landscapist.glide.GlideImage
 import com.example.sharerecipy.R.*
 import com.example.sharerecipy.SIGNUP_SCREEN
 import com.example.sharerecipy.common.composable.*
+import java.util.NoSuchElementException
 import com.example.sharerecipy.R.string as AppText
 import com.example.sharerecipy.R.color as AppColor
 
@@ -33,7 +36,6 @@ fun LoginScreen(
     viewModel: LoginViewModel,
     openAndPopUp: (String, String) -> Unit
 ){
-
     val context = LocalContext.current
     var email by remember { mutableStateOf("") }
     var pw by remember { mutableStateOf("") }
@@ -66,8 +68,7 @@ fun LoginScreen(
             imageModel = drawable.vegetables,
             modifier = Modifier
                 .height(150.dp)
-                .width(210.dp)
-        )
+                .width(210.dp))
         EmailField( AppText.email, email) { email = it }
         PasswordField( AppText.password, pw) { pw = it }
         Spacer(modifier = Modifier.height(10.dp))

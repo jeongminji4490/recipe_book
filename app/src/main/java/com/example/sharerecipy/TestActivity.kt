@@ -2,6 +2,7 @@ package com.example.sharerecipy
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -17,11 +18,14 @@ import com.example.sharerecipy.screens.login.LoginViewModel
 import com.example.sharerecipy.screens.recipe.RecipeDetailScreen
 import com.example.sharerecipy.screens.recipe.RecipeScreen
 import com.example.sharerecipy.screens.recipe.ViewModel
+import com.example.sharerecipy.screens.setting.SettingScreen
+import com.example.sharerecipy.screens.setting.SettingViewModel
 import com.example.sharerecipy.screens.signup.SignUpScreen
 import com.example.sharerecipy.screens.signup.SignUpViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.NoSuchElementException
 import kotlin.math.log
 
 @AndroidEntryPoint
@@ -35,7 +39,7 @@ class TestActivity : AppCompatActivity() {
             val signUpViewModel = hiltViewModel<SignUpViewModel>()
             val homeViewModel = hiltViewModel<HomeViewModel>()
             val recipeViewModel = hiltViewModel<ViewModel>()
-            val dataStore = DataStoreModule
+            val settingViewModel = hiltViewModel<SettingViewModel>()
             val appState = TestAppState(navController)
             MaterialTheme {
                 NavigationComponent(
@@ -43,8 +47,8 @@ class TestActivity : AppCompatActivity() {
                     loginViewModel,
                     signUpViewModel,
                     homeViewModel,
+                    settingViewModel,
                     recipeViewModel,
-                    dataStore,
                     appState
                 )
             }
@@ -57,8 +61,8 @@ class TestActivity : AppCompatActivity() {
         loginViewModel: LoginViewModel,
         signUpViewModel: SignUpViewModel,
         homeViewModel: HomeViewModel,
+        settingViewModel: SettingViewModel,
         recipeViewModel: ViewModel,
-        dataStore: DataStoreModule,
         appState: TestAppState
     ) {
         NavHost(
@@ -80,6 +84,12 @@ class TestActivity : AppCompatActivity() {
             composable(HOME_SCREEN) {
                 HomeScreen(
                     homeViewModel,
+                    openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) }
+                )
+            }
+            composable(SETTING_SCREEN) {
+                SettingScreen(
+                    settingViewModel,
                     openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) }
                 )
             }

@@ -127,8 +127,6 @@ fun RecipeCard(
                     AppColor.lightOrange,
                     Modifier.padding(5.dp))
                 {
-                    //val name = data.name.replace(" ","_")
-                    //Log.e("RECIPE_SCREEN", name)
                     viewModel.setRecipeName(data.name, openAndPopUp)
                 }
             }

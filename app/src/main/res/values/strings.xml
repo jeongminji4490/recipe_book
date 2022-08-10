@@ -41,6 +41,7 @@
     <!--HomeScreen -->
     <string name="modify_info">정보 수정</string>
     <string name="withdrawal">회원 탈퇴</string>
+    <string name="setting">설정</string>
     <string name="withdrawal_dialog">회원 탈퇴를 원하시면 확인을 눌러주세요(확인을 누르면 계정 복구가 불가능합니다).</string>
     <string name="wish_list">찜목록</string>
     <string name="show_recipe">레시피 보기</string>
@@ -50,6 +51,9 @@
     <!--RecipeScreen -->
     <string name="ingredients">재료</string>
     <string name="how_to_cook">방법</string>
+
+    <!--RecipeDetailScreen -->
+    <string name="no_image">[NO IMAGE]</string>
     
     <!-- FireStore -->
     <string name="no_such_document">No such document</string>
