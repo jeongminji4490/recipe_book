@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
-fun GlideImageComposable(
+fun ManualImageComposable(
     imageModel: Any?
 ) {
     GlideImage(

@@ -15,6 +15,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import com.example.sharerecipy.R
+import com.example.sharerecipy.common.theme.LightOrange
+import com.example.sharerecipy.common.theme.White
 
 @Composable
 fun Toolbar(@StringRes title: Int, icon: ImageVector, action: () -> Unit) {
@@ -30,7 +32,7 @@ fun Toolbar(@StringRes title: Int, icon: ImageVector, action: () -> Unit) {
                 onClick = action
             ) { Icon(icon,"") }
         },
-        backgroundColor = colorResource(R.color.lightOrange),
-        contentColor = Color.White
+        backgroundColor = LightOrange,
+        contentColor = White
     )
 }

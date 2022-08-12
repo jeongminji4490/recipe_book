@@ -1,6 +1,6 @@
 package com.example.sharerecipy
 
-import androidx.compose.runtime.Composable
+import com.example.sharerecipy.api.request.RecipeService
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

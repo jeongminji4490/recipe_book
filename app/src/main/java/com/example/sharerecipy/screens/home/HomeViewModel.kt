@@ -2,10 +2,10 @@ package com.example.sharerecipy.screens.home
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
-import com.example.sharerecipy.HOME_SCREEN
-import com.example.sharerecipy.RECIPE_SCREEN
-import com.example.sharerecipy.model.service.AccountService
+import androidx.lifecycle.viewModelScope
+import com.example.sharerecipy.api.request.AccountService
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel

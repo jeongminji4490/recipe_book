@@ -1,34 +1,27 @@
 package com.example.sharerecipy.screens.setting
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.AlertDialog
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sharerecipy.HOME_SCREEN
-import com.example.sharerecipy.R
 import com.example.sharerecipy.SETTING_SCREEN
+import com.example.sharerecipy.common.composable.*
+import com.example.sharerecipy.common.theme.Red
 import com.example.sharerecipy.R.string as AppText
 import com.example.sharerecipy.R.color as AppColor
-import com.example.sharerecipy.common.composable.BasicButton
-import com.example.sharerecipy.common.composable.ColorButton
-import com.example.sharerecipy.common.composable.DialogConfirmButton
-import com.example.sharerecipy.common.composable.Toolbar
 
 @Composable
 fun SettingScreen(
-    viewModel: SettingViewModel,
     openAndPopUp: (String, String) -> Unit
 ) {
     Scaffold(
@@ -38,23 +31,20 @@ fun SettingScreen(
             }
         },
         backgroundColor = colorResource(AppColor.lightOrange),
-        content = {
+        content = { paddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
-                    .padding(it),
+                    .padding(paddingValues),
                 horizontalAlignment = Alignment.CenterHorizontally
-            ) { MainContent(viewModel, openAndPopUp) }
+            ) { MainContent(openAndPopUp) }
         })
 }
 
 @Composable
-fun MainContent(
-    viewModel: SettingViewModel,
-    openAndPopUp: (String, String) -> Unit
-){
-
+fun MainContent(openAndPopUp: (String, String) -> Unit){
+    val viewModel : SettingViewModel = hiltViewModel()
     val context = LocalContext.current
     val withdrawalDialog = remember { mutableStateOf(false) }
 
@@ -75,28 +65,14 @@ fun MainContent(
                 .height(50.dp)
         ) { withdrawalDialog.value = true }
         Spacer(modifier = Modifier.height(10.dp))
-        if (withdrawalDialog.value){
-            AlertDialog(
-                backgroundColor = Color.White,
-                onDismissRequest = { withdrawalDialog.value = false },
-                title = {
-                    Text(
-                        text = stringResource(AppText.withdrawal),
-                        color = Color.Red)
-                },
-                text = {
-                    Text(
-                        text = stringResource(AppText.withdrawal_dialog),
-                        color = Color.Black)
-                },
-                confirmButton = {
-                    DialogConfirmButton(
-                        AppText.OK,
-                        action = { viewModel.accountWithdrawal(context, openAndPopUp) },
-                        R.color.red,
-                        R.color.white
-                    )
-                }
+        if (withdrawalDialog.value) {
+            Dialog(
+                AppText.withdrawal,
+                stringResource(AppText.withdrawal_dialog),
+                Red,
+                Icons.Filled.ExitToApp,
+                { viewModel.accountWithdrawal(context, openAndPopUp) },
+                { withdrawalDialog.value = false }
             )
         }
     }

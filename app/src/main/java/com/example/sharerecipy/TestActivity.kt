@@ -70,34 +70,21 @@ class TestActivity : AppCompatActivity() {
             startDestination = LOGIN_SCREEN
         ){
             composable(LOGIN_SCREEN) {
-                LoginScreen(
-                    loginViewModel,
-                    openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) }
-                )
+                LoginScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
             }
             composable(SIGNUP_SCREEN) {
-                SignUpScreen(
-                    signUpViewModel,
-                    openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) }
-                )
+                SignUpScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
             }
             composable(HOME_SCREEN) {
-                HomeScreen(
-                    homeViewModel,
-                    openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) }
-                )
+                HomeScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
             }
             composable(SETTING_SCREEN) {
-                SettingScreen(
-                    settingViewModel,
-                    openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) }
-                )
+                SettingScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
             }
             composable(RECIPE_SCREEN) {
                 RecipeScreen(
                     recipeViewModel,
-                    openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) }
-                )
+                    openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
             }
             composable(RECIPE_DETAIL_SCREEN){
                 RecipeDetailScreen(

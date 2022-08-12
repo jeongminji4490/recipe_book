@@ -1,49 +1,40 @@
 package com.example.sharerecipy.screens.home
 
 import android.util.Log
-import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sharerecipy.HOME_SCREEN
-import com.example.sharerecipy.LOGIN_SCREEN
 import com.example.sharerecipy.R.*
 import com.example.sharerecipy.RECIPE_SCREEN
 import com.example.sharerecipy.SETTING_SCREEN
-import com.example.sharerecipy.common.composable.DialogConfirmButton
 import com.example.sharerecipy.common.composable.IconOutlinedButton
 import com.example.sharerecipy.common.composable.Toolbar
+import com.example.sharerecipy.common.theme.Black
+import com.example.sharerecipy.common.theme.LightOrange
+import com.example.sharerecipy.common.theme.White
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.example.sharerecipy.R.string as AppText
-import com.example.sharerecipy.R.color as AppColor
 
 @Composable
-fun HomeScreen(
-    viewModel: HomeViewModel,
-    openAndPopUp: (String, String) -> Unit
-) {
+fun HomeScreen(openAndPopUp: (String, String) -> Unit){
     val auth = Firebase.auth
     val db = Firebase.firestore
     val currentUser = auth.currentUser // 로그인한 사용자
-    var email = "" // 이메일
-    var name by remember { mutableStateOf("") } // 닉네임
+    var email by rememberSaveable { mutableStateOf("") }
+    var name by rememberSaveable { mutableStateOf("") } // 닉네임
 
     currentUser?.let { user ->
         email = user.email.toString() // 사용자 이메일 가져오기
@@ -62,11 +53,20 @@ fun HomeScreen(
             Log.d(TAG, "get failed with ", exception)
         }
 
+    HomeContent(email, name, openAndPopUp)
+}
+
+@Composable
+fun HomeContent(
+    email: String,
+    name: String,
+    openAndPopUp: (String, String) -> Unit
+) {
     Scaffold(
         topBar = {
             Toolbar(title = AppText.app_name_version_2, Icons.Filled.Home) {  }
         },
-        backgroundColor = Color.White,
+        backgroundColor = White,
         content = {
             Column(
                 modifier = Modifier
@@ -107,24 +107,22 @@ fun HomeScreen(
                                 .fillMaxWidth()
                                 .padding(8.dp)
                         ) {
-                            OutlinedButton( // 설정
-                                onClick = { openAndPopUp(SETTING_SCREEN, HOME_SCREEN) },
-                                modifier = Modifier
-                                    .height(40.dp),
-                                border = BorderStroke(1.dp, Color.Black),
-                                shape = RoundedCornerShape(50),
-                                colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Black)
-                            ) {
-                                Text(text = stringResource(AppText.setting))
-                                Icon(
-                                    Icons.Filled.Settings,
-                                    "setting",
-                                )
-                            }
+                            IconOutlinedButton(
+                                AppText.setting,
+                                Black,
+                                White,
+                                Black,
+                                Black,
+                                Icons.Filled.Settings,
+                                "setting",
+                                Modifier.height(40.dp)
+                            ) { openAndPopUp(SETTING_SCREEN, HOME_SCREEN) }
                             IconOutlinedButton(
                                 AppText.wish_list,
-                                AppColor.lightOrange,
-                                AppColor.white,
+                                LightOrange,
+                                LightOrange,
+                                White,
+                                White,
                                 Icons.Filled.Favorite,
                                 "favorite",
                                 Modifier
@@ -135,8 +133,10 @@ fun HomeScreen(
                 }
                 IconOutlinedButton(
                     AppText.show_recipe,
-                    AppColor.lightOrange,
-                    AppColor.white,
+                    LightOrange,
+                    LightOrange,
+                    White,
+                    White,
                     Icons.Filled.OutdoorGrill,
                     "recipe_list",
                     Modifier
@@ -146,8 +146,10 @@ fun HomeScreen(
                 ) { openAndPopUp(RECIPE_SCREEN, HOME_SCREEN) }
                 IconOutlinedButton(
                     AppText.my_recipe,
-                    AppColor.lightOrange,
-                    AppColor.white,
+                    LightOrange,
+                    LightOrange,
+                    White,
+                    White,
                     Icons.Filled.Grade,
                     "my_recipe",
                     Modifier

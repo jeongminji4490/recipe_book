@@ -16,7 +16,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import com.example.sharerecipy.common.theme.White
 import com.example.sharerecipy.R.drawable as AppIcon
+
 
 @Composable
 fun EmailField(
@@ -31,19 +33,19 @@ fun EmailField(
         label = {
             Text(
                 text = stringResource(text),
-                color = Color.White
+                color = White
             )
         },
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            textColor = Color.White,
-            focusedBorderColor = Color.White,
-            unfocusedBorderColor = Color.White
+            textColor = White,
+            focusedBorderColor = White,
+            unfocusedBorderColor = White
         ),
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Email,
                 contentDescription = "email",
-                tint = Color.White
+                tint = White
             )
         }
     )
@@ -70,19 +72,19 @@ fun PasswordField(
         label = {
             Text(
                 text = stringResource(pw),
-                color = Color.White
+                color = White
             )
         },
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            textColor = Color.White,
-            focusedBorderColor = Color.White,
-            unfocusedBorderColor = Color.White
+            textColor = White,
+            focusedBorderColor = White,
+            unfocusedBorderColor = White
         ),
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Lock,
                 contentDescription = "Lock",
-                tint = Color.White) },
+                tint = White) },
         trailingIcon = {
             IconButton(onClick = { isVisible = !isVisible }) {
                 Icon(painter = icon, contentDescription = "Visibility")
@@ -106,19 +108,19 @@ fun NameField(
         label = {
             Text(
                 text = stringResource(text),
-                color = Color.White
+                color = White
             )
         },
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            textColor = Color.White,
-            focusedBorderColor = Color.White,
-            unfocusedBorderColor = Color.White
+            textColor = White,
+            focusedBorderColor = White,
+            unfocusedBorderColor = White
         ),
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Man,
                 contentDescription = "name",
-                tint = Color.White
+                tint = White
             )
         }
     )

@@ -23,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sharerecipy.R
 import com.example.sharerecipy.SIGNUP_SCREEN
+import com.example.sharerecipy.common.theme.LightOrange
+import com.example.sharerecipy.common.theme.White
 
 // 기본 버튼
 @Composable
@@ -32,8 +34,8 @@ fun BasicButton(@StringRes text: Int, modifier: Modifier, action: () -> Unit) {
         modifier = modifier,
         elevation = null,
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = colorResource(R.color.lightOrange),
-            contentColor = Color.White)
+            backgroundColor = LightOrange,
+            contentColor = White)
     ) {
         Text(
             text = stringResource(text),
@@ -47,16 +49,16 @@ fun BasicButton(@StringRes text: Int, modifier: Modifier, action: () -> Unit) {
 fun ColorButton(
     @StringRes text: Int,
     modifier: Modifier,
-    @ColorRes backgroundColor: Int,
-    @ColorRes contentColor: Int,
+    backgroundColor: Color,
+    contentColor: Color,
     action: () -> Unit) {
     Button(
         onClick = action,
         modifier = modifier,
         elevation = null,
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = colorResource(backgroundColor),
-            contentColor = colorResource(contentColor))
+            backgroundColor = backgroundColor,
+            contentColor = contentColor)
     ) {
         Text(
             text = stringResource(text),
@@ -68,9 +70,9 @@ fun ColorButton(
 @Composable
 fun BasicOutlinedButton(
     @StringRes text: Int,
-    @ColorRes backgroundColor: Int,
-    @ColorRes contentColor: Int,
-    @ColorRes borderColor: Int,
+    backgroundColor: Color,
+    contentColor: Color,
+    borderColor: Color,
     modifier: Modifier,
     action: () -> Unit
 ){
@@ -78,11 +80,10 @@ fun BasicOutlinedButton(
         onClick = action,
         modifier = Modifier,
         shape = RoundedCornerShape(50),
-        border = BorderStroke(1.dp, colorResource(borderColor)),
+        border = BorderStroke(1.dp, borderColor),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = colorResource(backgroundColor),
-            contentColor = colorResource(contentColor)
-        )
+            backgroundColor = backgroundColor,
+            contentColor = contentColor)
     ) {
         Text(text = stringResource(text))
     }
@@ -91,8 +92,10 @@ fun BasicOutlinedButton(
 @Composable
 fun IconOutlinedButton(
     @StringRes text: Int,
-    @ColorRes backgroundColor: Int,
-    @ColorRes contentColor: Int,
+    borderColor: Color,
+    backgroundColor: Color,
+    contentColor: Color,
+    iconColor: Color,
     icon: ImageVector,
     description: String,
     modifier: Modifier,
@@ -101,10 +104,10 @@ fun IconOutlinedButton(
         onClick = action,
         modifier = modifier,
         shape = RoundedCornerShape(50),
+        border = BorderStroke(1.dp, borderColor),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = colorResource(backgroundColor),
-            contentColor = colorResource(contentColor)
-        ),
+            backgroundColor = backgroundColor,
+            contentColor = contentColor)
     ) {
         Text(
             text = stringResource(text),
@@ -115,7 +118,7 @@ fun IconOutlinedButton(
             imageVector = icon,
             modifier = Modifier.padding(2.dp),
             contentDescription = description,
-            tint = Color.White
+            tint = iconColor
         )
     }
 }
@@ -124,14 +127,14 @@ fun IconOutlinedButton(
 fun DialogConfirmButton(
     @StringRes text: Int,
     action: () -> Unit,
-    @ColorRes backgroundColor: Int,
-    @ColorRes contentColor: Int
+    backgroundColor: Color,
+    contentColor: Color
 ) {
     Button(
         onClick = action,
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = colorResource(backgroundColor),
-            contentColor = colorResource(contentColor)
+            backgroundColor = backgroundColor,
+            contentColor = contentColor
         )
     ) {
         Text(text = stringResource(text))

@@ -12,6 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.sharerecipy.common.theme.Black
 import com.example.sharerecipy.R.string as AppText
 
 //@Composable
@@ -39,7 +40,7 @@ fun ManualTextComposable(
             .fillMaxWidth()
             .padding(15.dp),
         textAlign = TextAlign.Left,
-        color = Color.Black,
+        color = Black,
         fontSize = 16.sp,
         fontWeight = FontWeight.Light
     )
