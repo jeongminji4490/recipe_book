@@ -2,7 +2,6 @@ package com.example.sharerecipy
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -17,16 +16,14 @@ import com.example.sharerecipy.screens.login.LoginScreen
 import com.example.sharerecipy.screens.login.LoginViewModel
 import com.example.sharerecipy.screens.recipe.RecipeDetailScreen
 import com.example.sharerecipy.screens.recipe.RecipeScreen
-import com.example.sharerecipy.screens.recipe.ViewModel
+import com.example.sharerecipy.screens.recipe.RecipeViewModel
+import com.example.sharerecipy.screens.setting.EditProfileScreen
 import com.example.sharerecipy.screens.setting.SettingScreen
 import com.example.sharerecipy.screens.setting.SettingViewModel
 import com.example.sharerecipy.screens.signup.SignUpScreen
 import com.example.sharerecipy.screens.signup.SignUpViewModel
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.example.sharerecipy.screens.wish.WishListScreen
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.NoSuchElementException
-import kotlin.math.log
 
 @AndroidEntryPoint
 class TestActivity : AppCompatActivity() {
@@ -38,7 +35,7 @@ class TestActivity : AppCompatActivity() {
             val loginViewModel = hiltViewModel<LoginViewModel>()
             val signUpViewModel = hiltViewModel<SignUpViewModel>()
             val homeViewModel = hiltViewModel<HomeViewModel>()
-            val recipeViewModel = hiltViewModel<ViewModel>()
+            val recipeViewModel = hiltViewModel<RecipeViewModel>()
             val settingViewModel = hiltViewModel<SettingViewModel>()
             val appState = TestAppState(navController)
             MaterialTheme {
@@ -62,7 +59,7 @@ class TestActivity : AppCompatActivity() {
         signUpViewModel: SignUpViewModel,
         homeViewModel: HomeViewModel,
         settingViewModel: SettingViewModel,
-        recipeViewModel: ViewModel,
+        recipeViewModel: RecipeViewModel,
         appState: TestAppState
     ) {
         NavHost(
@@ -81,16 +78,18 @@ class TestActivity : AppCompatActivity() {
             composable(SETTING_SCREEN) {
                 SettingScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
             }
+            composable(WISH_LIST_SCREEN){
+                WishListScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
+            }
+            composable(EDIT_PROFILE_SCREEN){
+                EditProfileScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
+            }
             composable(RECIPE_SCREEN) {
                 RecipeScreen(
-                    recipeViewModel,
                     openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
             }
             composable(RECIPE_DETAIL_SCREEN){
-                RecipeDetailScreen(
-                    recipeViewModel,
-                    openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) }
-                )
+                RecipeDetailScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
             }
         }
     }

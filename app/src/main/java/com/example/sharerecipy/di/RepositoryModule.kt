@@ -1,18 +1,25 @@
 package com.example.sharerecipy.di
 
-import com.example.sharerecipy.api.request.RecipeService
-import com.example.sharerecipy.repository.Repository
+import com.example.sharerecipy.repository.impl.RepositoryImpl
+import com.example.sharerecipy.repository.RepositoryService
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.scopes.ViewModelScoped
+
+//@Module
+//@InstallIn(ViewModelComponent::class)
+//object RepositoryModule {
+//    @ViewModelScoped
+//    @Provides
+//    fun provideRepository(recipeService: RecipeService) = Repository(recipeService)
+//}
 
 @Module
 @InstallIn(ViewModelComponent::class)
-object RepositoryModule {
-
-    @ViewModelScoped
-    @Provides
-    fun provideRepository(recipeService: RecipeService) = Repository(recipeService)
+abstract class RepositoryModule {
+    @Binds
+    abstract fun provideRepositoryService(
+        serviceImpl: RepositoryImpl
+    ): RepositoryService
 }

@@ -95,7 +95,7 @@ dependencies {
     kapt(Hilt.HILT_COMPILER)
     implementation(Hilt.HILT_NAVIGATION_COMPOSE)
 
-    //DataStore
+    // DataStore
     implementation(DataStore.DATASTORE)
     implementation(DataStore.DATASTORE_CORE)
 }

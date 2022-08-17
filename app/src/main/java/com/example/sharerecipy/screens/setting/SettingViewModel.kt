@@ -20,4 +20,12 @@ class SettingViewModel  @Inject constructor(
     fun accountWithdrawal(context: Context, openAndPopUp: (String, String) -> Unit) {
         accountService.deleteAccount(context, openAndPopUp)
     }
+
+    fun editProfile(
+        context: Context,
+        name: String,
+        password: String,
+        openAndPopUp: (String, String) -> Unit) {
+        accountService.editProfile(context, name, password, openAndPopUp)
+    }
 }

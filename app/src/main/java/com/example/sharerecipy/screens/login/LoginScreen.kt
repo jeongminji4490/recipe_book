@@ -56,6 +56,7 @@ fun LoginContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(40.dp))
+
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(AppText.app_name_1),
@@ -64,6 +65,7 @@ fun LoginContent(
             fontFamily = FontFamily.Serif,
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold)
+
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(AppText.app_name_2),
@@ -72,14 +74,19 @@ fun LoginContent(
             fontFamily = FontFamily.Serif,
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold)
+
         GlideImage(
             imageModel = drawable.vegetables,
             modifier = Modifier
                 .height(150.dp)
                 .width(210.dp))
+
         EmailField( AppText.email, email, onEmailChange)
+
         PasswordField( AppText.password, pw, onPwChange)
+
         Spacer(modifier = Modifier.height(10.dp))
+
         ColorButton( // 로그인 버튼
             AppText.sign_in,
             Modifier
@@ -88,13 +95,16 @@ fun LoginContent(
             White,
             LightOrange
         ) { viewModel.login(email, pw, context, openAndPopUp) }
+
         Spacer(modifier = Modifier.height(10.dp))
+
         BasicButton( // 회원가입 버튼
             AppText.sign_up,
             Modifier
                 .fillMaxWidth()
                 .height(50.dp)
         ) { openAndPopUp(SIGNUP_SCREEN, LOGIN_SCREEN) }
+
         Spacer(modifier = Modifier.height(10.dp))
     }
 }

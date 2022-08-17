@@ -1,6 +1,5 @@
 package com.example.sharerecipy.screens.home
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -9,7 +8,6 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -18,11 +16,13 @@ import com.example.sharerecipy.HOME_SCREEN
 import com.example.sharerecipy.R.*
 import com.example.sharerecipy.RECIPE_SCREEN
 import com.example.sharerecipy.SETTING_SCREEN
+import com.example.sharerecipy.WISH_LIST_SCREEN
 import com.example.sharerecipy.common.composable.IconOutlinedButton
 import com.example.sharerecipy.common.composable.Toolbar
 import com.example.sharerecipy.common.theme.Black
 import com.example.sharerecipy.common.theme.LightOrange
 import com.example.sharerecipy.common.theme.White
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -30,28 +30,15 @@ import com.example.sharerecipy.R.string as AppText
 
 @Composable
 fun HomeScreen(openAndPopUp: (String, String) -> Unit){
-    val auth = Firebase.auth
-    val db = Firebase.firestore
-    val currentUser = auth.currentUser // 로그인한 사용자
+    val currentUser = Firebase.auth.currentUser // 로그인한 사용자
     var email by rememberSaveable { mutableStateOf("") }
     var name by rememberSaveable { mutableStateOf("") } // 닉네임
 
-    currentUser?.let { user ->
-        email = user.email.toString() // 사용자 이메일 가져오기
-    }
+    email = currentUser?.email.toString() // 사용자 이메일 가져오기
+    name = currentUser?.displayName.toString()
 
-    // user 컬렉션에서 email 에 해당하는 document 가져오기
-    val docRef = db.collection("user").document(email)
-    docRef.get()
-        .addOnSuccessListener { document ->
-            if (document != null) {
-                name = document.data?.get("nickname").toString() // 사용자 닉네임 가져오기
-            } else {
-                Log.d(TAG, "no such document")
-            }
-        }.addOnFailureListener { exception ->
-            Log.d(TAG, "get failed with ", exception)
-        }
+    // Scafford 위로
+
 
     HomeContent(email, name, openAndPopUp)
 }
@@ -88,7 +75,7 @@ fun HomeContent(
                             modifier = Modifier.fillMaxWidth(),
                             text = email,
                             textAlign = TextAlign.Left,
-                            color = Color.Black,
+                            color = Black,
                             fontSize = 20.sp
                         )
                         Spacer(modifier = Modifier.height(5.dp))
@@ -96,7 +83,7 @@ fun HomeContent(
                             modifier = Modifier.fillMaxWidth(),
                             text = name,
                             textAlign = TextAlign.Left,
-                            color = Color.Black,
+                            color = Black,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -127,7 +114,7 @@ fun HomeContent(
                                 "favorite",
                                 Modifier
                                     .height(40.dp)
-                            ) { }
+                            ) { openAndPopUp(WISH_LIST_SCREEN, HOME_SCREEN) }
                         }
                     }
                 }

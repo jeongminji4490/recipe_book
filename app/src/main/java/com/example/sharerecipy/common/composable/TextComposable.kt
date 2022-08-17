@@ -13,6 +13,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sharerecipy.common.theme.Black
+import com.example.sharerecipy.common.theme.White
 import com.example.sharerecipy.R.string as AppText
 
 //@Composable

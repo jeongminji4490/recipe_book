@@ -3,9 +3,11 @@ package com.example.sharerecipy.api.request.impl
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.sharerecipy.*
 import com.example.sharerecipy.api.request.AccountService
+import com.firebase.ui.auth.data.model.User
 import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -14,8 +16,6 @@ import javax.inject.Inject
 import com.example.sharerecipy.R.string as AppText
 
 class AccountServiceImpl @Inject constructor() : AccountService {
-
-    var loginValid : MutableLiveData<Boolean> = MutableLiveData()
 
     // 로그인
     override fun authenticate(
@@ -28,14 +28,12 @@ class AccountServiceImpl @Inject constructor() : AccountService {
             Firebase.auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful){ // 성공 시 메인화면으로 이동
-                        loginValid.value = true // 하기 위해 라이브데이터 검사
                         Toast.makeText(
                             context,
                             AppText.sign_in,
                             Toast.LENGTH_SHORT).show()
                         openAndPopUp(HOME_SCREEN, LOGIN_SCREEN)
                     }else { // 실패 시 진행바 중지 & 에러 토스트
-                        loginValid.value = false
                         try{
                             throw task.exception!!
                         }catch (e : FirebaseAuthInvalidUserException){
@@ -48,7 +46,6 @@ class AccountServiceImpl @Inject constructor() : AccountService {
                     }
                 }
         }else {
-            loginValid.value = false
             Toast.makeText(
                 context,
                 AppText.empty_id_or_pw,
@@ -65,8 +62,6 @@ class AccountServiceImpl @Inject constructor() : AccountService {
         context: Context,
         openAndPopUp: (String, String) -> Unit
     ) {
-        val db = Firebase.firestore
-        val users = db.collection("user")
         if (confirmPw!=password){
             Toast.makeText(context, AppText.password_match_error, Toast.LENGTH_SHORT).show()
         } else {
@@ -74,19 +69,22 @@ class AccountServiceImpl @Inject constructor() : AccountService {
                 Firebase.auth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) { // 성공 시 회원가입 완료
-                            val user = hashMapOf(
-                                "email" to email,
-                                "nickname" to name,
-                                "password" to password
+                            val db = Firebase.firestore
+                            val users = db.collection("user")
+                            val wishList = hashMapOf(
+                                "wish list" to arrayListOf<String>(),
                             )
-                            // user 객체를 파이어스토어의 user 컬렉션에 email 이라는 document 로 저장
-                            users.document(email).set(user)
+                            // wishList 객체를 파이어스토어의 user 컬렉션에 email 이라는 document 로 저장
+                            users.document(email).set(wishList)
                                 .addOnSuccessListener { it ->
                                     Log.i(TAG, "DocumentSnapshot added with ID: $it")
                                 }.addOnFailureListener { e ->
                                     Log.w(TAG, "Error adding document", e)
                                 }
-                            Toast.makeText(context, AppText.complete_creation, Toast.LENGTH_SHORT).show()
+                            val newProfile = UserProfileChangeRequest.Builder().setDisplayName(name).build()
+                            Firebase.auth.currentUser?.updateProfile(newProfile)
+                            Toast.makeText(context, AppText.complete_creation, Toast.LENGTH_SHORT)
+                                .show()
                             openAndPopUp(LOGIN_SCREEN, SIGNUP_SCREEN) // 로그인 화면으로 이동
                         }else { // 실패 시 에러 토스트
                             try {
@@ -95,7 +93,7 @@ class AccountServiceImpl @Inject constructor() : AccountService {
                                 Toast.makeText(context, AppText.already_exist_email, Toast.LENGTH_SHORT).show()
                             }catch (e: FirebaseAuthWeakPasswordException){
                                 Toast.makeText(context, AppText.password_error, Toast.LENGTH_SHORT).show()
-                            } catch (e: FirebaseAuthInvalidCredentialsException){
+                            }catch (e: FirebaseAuthInvalidCredentialsException){
                                 Toast.makeText(context, AppText.invalid_email, Toast.LENGTH_SHORT).show()
                             }catch (e: FirebaseAuthException){
                                 Toast.makeText(context, e.errorCode, Toast.LENGTH_SHORT).show()
@@ -137,6 +135,35 @@ class AccountServiceImpl @Inject constructor() : AccountService {
         val currentUser = Firebase.auth.currentUser
         if (currentUser!=null)
             openAndPopUp(HOME_SCREEN, LOGIN_SCREEN)
+    }
+
+    override fun editProfile( // 회원정보 수정
+        context: Context,
+        name: String,
+        password: String,
+        openAndPopUp: (String, String) -> Unit
+    ) {
+        val currentUser = Firebase.auth.currentUser
+        if (currentUser != null){
+            val newProfile = UserProfileChangeRequest.Builder().setDisplayName(name).build()
+            currentUser.updateProfile(newProfile)
+            currentUser.updatePassword(password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful){
+                        Toast.makeText(context, AppText.complete_edit, Toast.LENGTH_SHORT)
+                            .show()
+                        openAndPopUp(LOGIN_SCREEN, EDIT_PROFILE_SCREEN) // 로그인 화면으로 이동
+                    }else {
+                        try {
+                            throw task.exception!!
+                        }catch (e: FirebaseAuthWeakPasswordException) {
+                            Toast.makeText(context, AppText.password_error, Toast.LENGTH_SHORT).show()
+                        }catch (e: FirebaseAuthException){
+                            Toast.makeText(context, e.errorCode, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+        }
     }
 
     companion object{

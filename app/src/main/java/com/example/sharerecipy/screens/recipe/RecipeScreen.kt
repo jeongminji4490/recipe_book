@@ -1,5 +1,6 @@
 package com.example.sharerecipy.screens.recipe
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,6 +12,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.OutdoorGrill
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,10 +32,19 @@ import com.example.sharerecipy.R.string as AppText
 
 @Composable
 fun RecipeScreen(
-    viewModel: ViewModel,
     openAndPopUp: (String, String) -> Unit) {
 
-    val list = viewModel.list.observeAsState().value
+    val viewModel : RecipeViewModel = hiltViewModel()
+    val recipeList = viewModel.recipeList
+    val wishList = viewModel.wishList
+
+    LaunchedEffect(true){
+        viewModel.getRecipe()
+        viewModel.getWishList()
+    }
+
+    var wishValue by rememberSaveable { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             Toolbar(AppText.app_name_version_2, Icons.Filled.ArrowBack) {
@@ -46,10 +57,18 @@ fun RecipeScreen(
                 .padding(it)
                 .background(LightOrange)
         ) {
-            list?.let {
+            recipeList.value?.let {
                 LazyColumn {
                     items(it.list.recipes) { item ->
-                        RecipeCard(item, openAndPopUp)
+                        wishList.forEach { wishName ->
+                            //Log.e(TAG, wishName)
+                            if (item.name == wishName){
+                                wishValue = true
+                                return@forEach
+                            }
+                        }
+                        RecipeCard(item, wishValue, openAndPopUp)
+                        wishValue = false
                     }
                 }
             }
@@ -60,11 +79,13 @@ fun RecipeScreen(
 @Composable
 fun RecipeCard(
     data: Recipe,
+    value: Boolean,
     openAndPopUp: (String, String) -> Unit,
 ){
-    val viewModel: ViewModel = hiltViewModel()
+    val viewModel: RecipeViewModel = hiltViewModel()
     val ingredientDialog = remember { mutableStateOf(false) }
-    val pickState = remember { mutableStateOf(false) }
+    val pickState = remember { mutableStateOf(value) }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -75,7 +96,13 @@ fun RecipeCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             IconButton(
-                onClick = { pickState.value = !pickState.value },
+                onClick = {
+                    pickState.value = !pickState.value
+                    if (pickState.value){
+                        viewModel.addWishRecipe(data.name)
+                    }else {
+                        viewModel.deleteWishRecipe(data.name)
+                    } },
             ) {
                 Icon(
                     Icons.Filled.Favorite,
@@ -130,3 +157,5 @@ fun RecipeCard(
         }
     }
 }
+
+const val TAG = "RecipeScreen"

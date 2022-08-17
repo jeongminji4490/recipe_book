@@ -22,6 +22,7 @@ import com.example.sharerecipy.common.composable.EmailField
 import com.example.sharerecipy.common.composable.NameField
 import com.example.sharerecipy.common.composable.PasswordField
 import com.example.sharerecipy.common.theme.LightOrange
+import com.example.sharerecipy.common.theme.White
 import com.example.sharerecipy.R.string as AppText
 
 @Composable
@@ -54,27 +55,37 @@ fun SignUpContent(
             .padding(20.dp),
     ) {
         Spacer(modifier = Modifier.height(40.dp))
+
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(AppText.sign_up),
             textAlign = TextAlign.Left,
-            color = Color.White,
+            color = White,
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold
         )
+
         Spacer(modifier = Modifier.height(60.dp))
+
         EmailField(AppText.email, email, onEmailChange) // 이메일 입력
+
         NameField(AppText.name, name, onNameChange) // 이름 입력
+
         PasswordField( AppText.password, pw, onPwChange) // 패스워드 입력
+
         PasswordField( AppText.confirm_password, confirmPw, onConfirmPwChange) // 패스워드 확인
+
         Spacer(modifier = Modifier.height(30.dp))
+
         BasicButton( // 계정 생성
             AppText.sign_up,
             Modifier
                 .fillMaxWidth()
                 .height(60.dp)
         ) { viewModel.createAccount(email, name, pw, confirmPw, context, openAndPopUp) }
+
         Spacer(modifier = Modifier.height(10.dp))
+
         BasicButton( // 뒤로가기
             AppText.cancel,
             Modifier

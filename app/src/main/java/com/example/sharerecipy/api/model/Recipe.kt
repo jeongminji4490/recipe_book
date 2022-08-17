@@ -1,5 +1,6 @@
 package com.example.sharerecipy.api.model
 
+import androidx.annotation.XmlRes
 import com.google.gson.annotations.SerializedName
 import java.net.URL
 
@@ -58,9 +59,12 @@ data class Recipe(
     @SerializedName("MANUAL_IMG19") val manual19_img: String,
     @SerializedName("MANUAL20") val manual20: String,
     @SerializedName("MANUAL_IMG20") val manual20_img: String
-
-
 )
+
+
+//data class RecipeTest(
+//    @Serial
+//)
 
 //data class RecipeInfoList(
 //    @SerializedName("COOKRCP01") val list : RecipeInfoDto

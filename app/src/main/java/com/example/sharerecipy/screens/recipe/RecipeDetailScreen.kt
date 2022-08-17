@@ -9,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sharerecipy.*
 import com.example.sharerecipy.R
 import com.example.sharerecipy.api.model.Recipe
@@ -28,12 +30,16 @@ import com.example.sharerecipy.common.composable.Toolbar
 
 @Composable
 fun RecipeDetailScreen(
-    viewModel: ViewModel,
     openAndPopUp: (String, String) -> Unit
 ) {
-    viewModel.getInfoTest()
-    val list = viewModel.infos.observeAsState().value
+    val viewModel: RecipeViewModel = hiltViewModel()
     val scrollState = rememberScrollState()
+    val list = viewModel.info
+
+    LaunchedEffect(true) {
+        viewModel.getInfo()
+    }
+
     Scaffold(
         topBar = {
             Toolbar(R.string.app_name_version_2, Icons.Filled.ArrowBack) {
@@ -48,7 +54,7 @@ fun RecipeDetailScreen(
                     .verticalScroll(scrollState)
                     .background(colorResource(R.color.white))
             ) {
-                list?.let { data ->
+                list.value?.let { data ->
                     RecipeDetailContent(data)
                 }
             }

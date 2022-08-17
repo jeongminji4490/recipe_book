@@ -13,6 +13,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.sharerecipy.EDIT_PROFILE_SCREEN
 import com.example.sharerecipy.HOME_SCREEN
 import com.example.sharerecipy.SETTING_SCREEN
 import com.example.sharerecipy.common.composable.*
@@ -49,6 +50,13 @@ fun MainContent(openAndPopUp: (String, String) -> Unit){
     val withdrawalDialog = remember { mutableStateOf(false) }
 
     Column {
+        BasicButton( // 정보수정 버튼
+            AppText.modify_info,
+            Modifier
+                .fillMaxWidth()
+                .padding(15.dp)
+                .height(50.dp)
+        ) { openAndPopUp(EDIT_PROFILE_SCREEN, SETTING_SCREEN) }
         BasicButton( // 로그아웃 버튼
             AppText.logout,
             Modifier
