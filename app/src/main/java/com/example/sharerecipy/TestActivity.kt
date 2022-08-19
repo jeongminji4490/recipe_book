@@ -73,23 +73,29 @@ class TestActivity : AppCompatActivity() {
                 SignUpScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
             }
             composable(HOME_SCREEN) {
-                HomeScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
+                HomeScreen(
+                    openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
             }
             composable(SETTING_SCREEN) {
                 SettingScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
             }
             composable(WISH_LIST_SCREEN){
-                WishListScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
+                WishListScreen(
+                    openScreen = { route -> appState.navigate(route) },
+                    openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
             }
             composable(EDIT_PROFILE_SCREEN){
                 EditProfileScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
             }
             composable(RECIPE_SCREEN) {
                 RecipeScreen(
+                    openScreen = { route -> appState.navigate(route) },
                     openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
             }
             composable(RECIPE_DETAIL_SCREEN){
-                RecipeDetailScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
+                RecipeDetailScreen(
+                    popUpScreen = { appState.popUp() }
+                )
             }
         }
     }

@@ -2,14 +2,14 @@ package com.example.sharerecipy.screens.recipe
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.OutdoorGrill
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -24,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sharerecipy.*
 import com.example.sharerecipy.api.model.Recipe
 import com.example.sharerecipy.common.composable.BasicOutlinedButton
+import com.example.sharerecipy.common.composable.ChipComposable
 import com.example.sharerecipy.common.composable.Dialog
 import com.example.sharerecipy.common.composable.Toolbar
 import com.example.sharerecipy.common.theme.*
@@ -32,6 +33,7 @@ import com.example.sharerecipy.R.string as AppText
 
 @Composable
 fun RecipeScreen(
+    openScreen: (String) -> Unit,
     openAndPopUp: (String, String) -> Unit) {
 
     val viewModel : RecipeViewModel = hiltViewModel()
@@ -44,32 +46,135 @@ fun RecipeScreen(
     }
 
     var wishValue by rememberSaveable { mutableStateOf(false) }
+    var type by rememberSaveable { mutableStateOf("ALL") }
+    val scrollState = rememberScrollState()
 
     Scaffold(
         topBar = {
-            Toolbar(AppText.app_name_version_2, Icons.Filled.ArrowBack) {
-                openAndPopUp(HOME_SCREEN, RECIPE_SCREEN)
-        } }
+            Toolbar(AppText.recipe_list, Icons.Filled.ArrowBack) {
+                openAndPopUp(HOME_SCREEN, RECIPE_SCREEN) }
+        }
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
-                .background(LightOrange)
+                .background(White)
         ) {
+            Row(
+                modifier = Modifier
+                    .horizontalScroll(scrollState)
+                    .padding(15.dp),
+
+                verticalAlignment = Alignment.CenterVertically) {
+
+                ChipComposable(AppText.all, Icons.Filled.RiceBowl) { type = "ALL" }
+                Spacer(Modifier.width(5.dp))
+
+                ChipComposable(AppText.rice, Icons.Filled.RiceBowl) { type = "밥" }
+                Spacer(Modifier.width(5.dp))
+
+                ChipComposable(AppText.dessert, Icons.Filled.Cookie) { type = "후식" }
+                Spacer(Modifier.width(5.dp))
+
+                ChipComposable(AppText.soup, Icons.Filled.SoupKitchen) { type = "국&찌개" }
+                Spacer(Modifier.width(5.dp))
+
+                ChipComposable(AppText.side, Icons.Filled.EggAlt) { type = "반찬" }
+                Spacer(Modifier.width(5.dp))
+
+                ChipComposable(AppText.ilpoom, Icons.Filled.RamenDining) { type = "일품" }
+            }
             recipeList.value?.let {
-                LazyColumn {
-                    items(it.list.recipes) { item ->
-                        wishList.forEach { wishName ->
-                            //Log.e(TAG, wishName)
-                            if (item.name == wishName){
-                                wishValue = true
-                                return@forEach
+                when (type) {
+                    "ALL" ->
+                        LazyColumn {
+                            items(it.list.recipes) { item ->
+                            wishList.forEach { wishName ->
+                                if (item.name == wishName.key){
+                                    wishValue = true
+                                    return@forEach
+                                }
+                            }
+                            RecipeCard(item, wishValue, openScreen)
+                            wishValue = false
+                        }
+                    }
+                    "밥" ->
+                        LazyColumn {
+                            items(it.list.recipes) { item ->
+                                if (item.type == "밥"){
+                                    wishList.forEach { wishName ->
+                                        if (item.name == wishName.key){
+                                            wishValue = true
+                                            return@forEach
+                                        }
+                                    }
+                                    RecipeCard(item, wishValue, openScreen)
+                                    wishValue = false
+                                }
                             }
                         }
-                        RecipeCard(item, wishValue, openAndPopUp)
-                        wishValue = false
-                    }
+                    "후식" ->
+                        LazyColumn {
+                            items(it.list.recipes) { item ->
+                                if (item.type == "후식"){
+                                    wishList.forEach { wishName ->
+                                        if (item.name == wishName.key){
+                                            wishValue = true
+                                            return@forEach
+                                        }
+                                    }
+                                    RecipeCard(item, wishValue, openScreen)
+                                    wishValue = false
+                                }
+                            }
+                        }
+                    "국&찌개" ->
+                        LazyColumn {
+                            items(it.list.recipes) { item ->
+                                if (item.type == "국&찌개"){
+                                    wishList.forEach { wishName ->
+                                        if (item.name == wishName.key){
+                                            wishValue = true
+                                            return@forEach
+                                        }
+                                    }
+                                    RecipeCard(item, wishValue, openScreen)
+                                    wishValue = false
+                                }
+                            }
+                        }
+                    "반찬" ->
+                        LazyColumn {
+                            items(it.list.recipes) { item ->
+                                if (item.type == "반찬"){
+                                    wishList.forEach { wishName ->
+                                        if (item.name == wishName.key){
+                                            wishValue = true
+                                            return@forEach
+                                        }
+                                    }
+                                    RecipeCard(item, wishValue, openScreen)
+                                    wishValue = false
+                                }
+                            }
+                        }
+                    "일품" ->
+                        LazyColumn {
+                            items(it.list.recipes) { item ->
+                                if (item.type == "일품"){
+                                    wishList.forEach { wishName ->
+                                        if (item.name == wishName.key){
+                                            wishValue = true
+                                            return@forEach
+                                        }
+                                    }
+                                    RecipeCard(item, wishValue, openScreen)
+                                    wishValue = false
+                                }
+                            }
+                        }
                 }
             }
         }
@@ -80,7 +185,7 @@ fun RecipeScreen(
 fun RecipeCard(
     data: Recipe,
     value: Boolean,
-    openAndPopUp: (String, String) -> Unit,
+    openScreen: (String) -> Unit
 ){
     val viewModel: RecipeViewModel = hiltViewModel()
     val ingredientDialog = remember { mutableStateOf(false) }
@@ -99,13 +204,13 @@ fun RecipeCard(
                 onClick = {
                     pickState.value = !pickState.value
                     if (pickState.value){
-                        viewModel.addWishRecipe(data.name)
+                        viewModel.addWishRecipe(data.name, data.ingredient)
                     }else {
-                        viewModel.deleteWishRecipe(data.name)
+                        viewModel.deleteWishRecipe(data.name, data.ingredient)
                     } },
             ) {
                 Icon(
-                    Icons.Filled.Favorite,
+                    Icons.Filled.Bookmark,
                     contentDescription = "",
                     tint = if (!pickState.value) LightGray else LightOrange
                 )
@@ -142,7 +247,7 @@ fun RecipeCard(
                     White,
                     LightOrange,
                     Modifier.padding(5.dp))
-                { viewModel.setRecipeName(data.name, openAndPopUp) }
+                { viewModel.setRecipeName(data.name, openScreen) }
             }
             if (ingredientDialog.value) {
                 Dialog(

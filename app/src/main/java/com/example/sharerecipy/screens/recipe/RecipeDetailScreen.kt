@@ -10,7 +10,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,13 +23,14 @@ import com.example.sharerecipy.*
 import com.example.sharerecipy.R
 import com.example.sharerecipy.api.model.Recipe
 import com.example.sharerecipy.R.color as AppColor
+import com.example.sharerecipy.R.string as AppText
 import com.example.sharerecipy.common.composable.ManualImageComposable
 import com.example.sharerecipy.common.composable.ManualTextComposable
 import com.example.sharerecipy.common.composable.Toolbar
 
 @Composable
 fun RecipeDetailScreen(
-    openAndPopUp: (String, String) -> Unit
+    popUpScreen: () -> Unit
 ) {
     val viewModel: RecipeViewModel = hiltViewModel()
     val scrollState = rememberScrollState()
@@ -42,8 +42,9 @@ fun RecipeDetailScreen(
 
     Scaffold(
         topBar = {
-            Toolbar(R.string.app_name_version_2, Icons.Filled.ArrowBack) {
-                openAndPopUp(RECIPE_SCREEN, RECIPE_DETAIL_SCREEN)
+            Toolbar(AppText.method, Icons.Filled.ArrowBack) {
+                //openAndPopUp(RECIPE_SCREEN, RECIPE_DETAIL_SCREEN)
+                popUpScreen()
             }
         },
         content = {

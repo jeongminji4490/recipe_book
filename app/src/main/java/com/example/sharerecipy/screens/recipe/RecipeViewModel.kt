@@ -3,6 +3,7 @@ package com.example.sharerecipy.screens.recipe
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.MutableLiveData
@@ -28,9 +29,9 @@ class RecipeViewModel @Inject constructor(
 ) : ViewModel() {
 
     var recipeList: MutableState<RecipeList?> = mutableStateOf(null)
-    var wishList = mutableStateListOf<String>()
+    var wishList = mutableStateMapOf<String, String>()
+    var methodList = mutableStateListOf<String>()
     var info: MutableState<Recipe?> = mutableStateOf(null)
-    //var infos: MutableLiveData<Recipe> = MutableLiveData()
 
     // onEach vs collect
     suspend fun getRecipe() {
@@ -44,11 +45,16 @@ class RecipeViewModel @Inject constructor(
     suspend fun getWishList() {
         viewModelScope.launch {
             service.getWishList().collect() {
-                val newString = it?.replace("[", "")?.replace("]", "")?.split(", ")
-                newString?.forEach { name ->
-                    //Log.e(TAG, name)
-                    wishList.add(name)
+                //val newString = it?.replace("[", "")?.replace("]", "")?.split(", ")
+                val newString = it?.split("}, ")
+                newString?.forEach { string ->
+                    val list = string.replace("[{", "").replace("{", "").replace("}]", "").split("=")
+                    wishList[list[0]] = list[1]
+                    //methodList.add(list[1])
                 }
+//                newString?.forEach { name ->
+//                    wishList.add(name)
+//                }
             }
         }
     }
@@ -69,18 +75,19 @@ class RecipeViewModel @Inject constructor(
         }
     }
 
-    fun addWishRecipe(name: String) {
-        service.addWishRecipe(name)
+    fun addWishRecipe(name: String, ingredients: String) {
+        service.addWishRecipe(name, ingredients)
     }
 
-    fun deleteWishRecipe(name: String) {
-        service.deleteWishRecipe(name)
+    fun deleteWishRecipe(name: String,  ingredients: String) {
+        service.deleteWishRecipe(name, ingredients)
     }
 
-    fun setRecipeName(name: String, openAndPopUp: (String, String) -> Unit) {
+    fun setRecipeName(name: String, openScreen: (String) -> Unit,) {
         viewModelScope.launch {
             dataStore.setRecipeName(name)
-            openAndPopUp(RECIPE_DETAIL_SCREEN, RECIPE_SCREEN)
+            //openAndPopUp(RECIPE_DETAIL_SCREEN, RECIPE_SCREEN)
+            openScreen(RECIPE_DETAIL_SCREEN)
         }
     }
 

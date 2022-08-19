@@ -3,6 +3,7 @@ package com.example.sharerecipy.api.request.impl
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.collection.arrayMapOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.sharerecipy.*
@@ -71,8 +72,12 @@ class AccountServiceImpl @Inject constructor() : AccountService {
                         if (task.isSuccessful) { // 성공 시 회원가입 완료
                             val db = Firebase.firestore
                             val users = db.collection("user")
+//                            val wishList = hashMapOf(
+//                                "wish list" to arrayListOf<String>(),
+//                            )
                             val wishList = hashMapOf(
-                                "wish list" to arrayListOf<String>(),
+                                "wish list" to arrayListOf<Map<String, String>>(),
+                                //"wish list" to arrayMapOf<String, String>()
                             )
                             // wishList 객체를 파이어스토어의 user 컬렉션에 email 이라는 document 로 저장
                             users.document(email).set(wishList)

@@ -27,7 +27,7 @@ fun SettingScreen(
 ) {
     Scaffold(
         topBar = {
-            Toolbar(AppText.app_name_version_2, Icons.Filled.ArrowBack) {
+            Toolbar(AppText.setting_eng, Icons.Filled.ArrowBack) {
                 openAndPopUp(HOME_SCREEN, SETTING_SCREEN)
             }
         },

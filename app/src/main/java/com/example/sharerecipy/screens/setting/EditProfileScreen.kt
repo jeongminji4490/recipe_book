@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sharerecipy.EDIT_PROFILE_SCREEN
+import com.example.sharerecipy.HOME_SCREEN
 import com.example.sharerecipy.R
 import com.example.sharerecipy.R.string as AppText
 import com.example.sharerecipy.SETTING_SCREEN
@@ -46,8 +47,8 @@ fun EditProfileScreen(
 
     Scaffold(
         topBar = {
-            Toolbar(R.string.app_name_version_2, Icons.Filled.ArrowBack) {
-                openAndPopUp(SETTING_SCREEN, EDIT_PROFILE_SCREEN)
+            Toolbar(AppText.edit_profile, Icons.Filled.ArrowBack) {
+                openAndPopUp(HOME_SCREEN, EDIT_PROFILE_SCREEN)
             }
         },
         backgroundColor = colorResource(R.color.white),

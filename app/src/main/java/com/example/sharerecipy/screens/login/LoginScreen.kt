@@ -25,8 +25,7 @@ import com.skydoves.landscapist.glide.GlideImage
 import com.example.sharerecipy.R.*
 import com.example.sharerecipy.SIGNUP_SCREEN
 import com.example.sharerecipy.common.composable.*
-import com.example.sharerecipy.common.theme.LightOrange
-import com.example.sharerecipy.common.theme.White
+import com.example.sharerecipy.common.theme.*
 import com.example.sharerecipy.R.string as AppText
 
 @Composable
@@ -51,7 +50,7 @@ fun LoginContent(
     Column(modifier = Modifier
         .fillMaxWidth()
         .fillMaxHeight()
-        .background(LightOrange)
+        .background(Beige)
         .padding(20.dp), // Column 안에서 백그라운드 색 설정하면 스캐폴드에서 지정한 배경색 적용 X
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -61,7 +60,7 @@ fun LoginContent(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(AppText.app_name_1),
             textAlign = TextAlign.Center,
-            color = White,
+            color = Navy,
             fontFamily = FontFamily.Serif,
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold)
@@ -70,7 +69,7 @@ fun LoginContent(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(AppText.app_name_2),
             textAlign = TextAlign.Center,
-            color = White,
+            color = Navy,
             fontFamily = FontFamily.Serif,
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold)
@@ -92,18 +91,21 @@ fun LoginContent(
             Modifier
                 .fillMaxWidth()
                 .height(50.dp),
-            White,
-            LightOrange
+            Navy,
+            White
         ) { viewModel.login(email, pw, context, openAndPopUp) }
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        BasicButton( // 회원가입 버튼
+        ColorButton( // 로그인 버튼
             AppText.sign_up,
             Modifier
                 .fillMaxWidth()
-                .height(50.dp)
+                .height(50.dp),
+            Beige,
+            Navy
         ) { openAndPopUp(SIGNUP_SCREEN, LOGIN_SCREEN) }
+
 
         Spacer(modifier = Modifier.height(10.dp))
     }

@@ -17,11 +17,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sharerecipy.LOGIN_SCREEN
 import com.example.sharerecipy.R.*
 import com.example.sharerecipy.SIGNUP_SCREEN
-import com.example.sharerecipy.common.composable.BasicButton
-import com.example.sharerecipy.common.composable.EmailField
-import com.example.sharerecipy.common.composable.NameField
-import com.example.sharerecipy.common.composable.PasswordField
+import com.example.sharerecipy.common.composable.*
+import com.example.sharerecipy.common.theme.Beige
 import com.example.sharerecipy.common.theme.LightOrange
+import com.example.sharerecipy.common.theme.Navy
 import com.example.sharerecipy.common.theme.White
 import com.example.sharerecipy.R.string as AppText
 
@@ -51,7 +50,7 @@ fun SignUpContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(LightOrange)
+            .background(Beige)
             .padding(20.dp),
     ) {
         Spacer(modifier = Modifier.height(40.dp))
@@ -60,7 +59,7 @@ fun SignUpContent(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(AppText.sign_up),
             textAlign = TextAlign.Left,
-            color = White,
+            color = Navy,
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold
         )
@@ -77,20 +76,24 @@ fun SignUpContent(
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        BasicButton( // 계정 생성
+        ColorButton( // 계정 생성
             AppText.sign_up,
             Modifier
                 .fillMaxWidth()
-                .height(60.dp)
+                .height(60.dp),
+            Beige,
+            Navy
         ) { viewModel.createAccount(email, name, pw, confirmPw, context, openAndPopUp) }
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        BasicButton( // 뒤로가기
+        ColorButton( // 뒤로가기
             AppText.cancel,
             Modifier
                 .fillMaxWidth()
-                .height(60.dp)
+                .height(60.dp),
+            Beige,
+            Navy
         ) { openAndPopUp(LOGIN_SCREEN, SIGNUP_SCREEN) }
     }
 }

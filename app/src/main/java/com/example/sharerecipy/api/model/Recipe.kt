@@ -19,6 +19,7 @@ data class Recipe(
     @SerializedName("RCP_NM") val name : String,
     @SerializedName("ATT_FILE_NO_MAIN") val imageUrl: URL,
     @SerializedName("RCP_PARTS_DTLS") val ingredient: String,
+    @SerializedName("RCP_PAT2") val type: String,
     @SerializedName("MANUAL01") val manual1: String,
     @SerializedName("MANUAL_IMG01") val manual1_img: String,
     @SerializedName("MANUAL02") val manual2: String,

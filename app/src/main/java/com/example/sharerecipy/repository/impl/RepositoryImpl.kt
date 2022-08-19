@@ -1,6 +1,7 @@
 package com.example.sharerecipy.repository.impl
 
 import android.util.Log
+import androidx.collection.arrayMapOf
 import com.example.sharerecipy.BuildConfig
 import com.example.sharerecipy.DataState
 import com.example.sharerecipy.api.model.RecipeList
@@ -54,42 +55,64 @@ class RepositoryImpl @Inject constructor(
         awaitClose()
     }
 
-    override fun addWishRecipe(name: String) {
+    override fun addWishRecipe(name: String, ingredients: String) {
         val currentUser = Firebase.auth.currentUser // 로그인한 사용자
         val db = Firebase.firestore
         val docRef = db.collection("user").document(currentUser?.email.toString())
 
         docRef.get()
             .addOnSuccessListener { document ->
-                if (document != null) {
+                if (document != null){
                     docRef.update(
-                        "wish list", FieldValue.arrayUnion(name)
+                        "wish list", FieldValue.arrayUnion(mapOf(name to ingredients))
                     )
-                } else {
+                }else {
                     Log.d(TAG, "no such document")
                 }
             }.addOnFailureListener { exception ->
                 Log.d(TAG, "get failed with ", exception)
             }
+
+//        docRef.get()
+//            .addOnSuccessListener { document ->
+//                if (document != null) {
+//                    docRef.update(
+//                        "wish list", FieldValue.arrayUnion(name)
+//                    )
+//                } else {
+//                    Log.d(TAG, "no such document")
+//                }
+//            }.addOnFailureListener { exception ->
+//                Log.d(TAG, "get failed with ", exception)
+//            }
     }
 
-    override fun deleteWishRecipe(name: String) {
+    override fun deleteWishRecipe(name: String,  ingredients: String) {
         val currentUser = Firebase.auth.currentUser // 로그인한 사용자
         val db = Firebase.firestore
         val docRef = db.collection("user").document(currentUser?.email.toString())
 
         docRef.get()
             .addOnSuccessListener { document ->
-                if (document != null) {
+                if (document != null){
                     docRef.update(
-                        "wish list", FieldValue.arrayRemove(name)
+                        "wish list", FieldValue.arrayRemove(mapOf(name to ingredients))
                     )
-                } else {
-                    Log.d(TAG, "no such document")
                 }
-            }.addOnFailureListener { exception ->
-                Log.d(TAG, "get failed with ", exception)
             }
+
+//        docRef.get()
+//            .addOnSuccessListener { document ->
+//                if (document != null) {
+//                    docRef.update(
+//                        "wish list", FieldValue.arrayRemove(name)
+//                    )
+//                } else {
+//                    Log.d(TAG, "no such document")
+//                }
+//            }.addOnFailureListener { exception ->
+//                Log.d(TAG, "get failed with ", exception)
+//            }
     }
 
     companion object {

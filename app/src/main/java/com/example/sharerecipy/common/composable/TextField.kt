@@ -13,10 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import com.example.sharerecipy.common.theme.Black
+import com.example.sharerecipy.common.theme.Navy
 import com.example.sharerecipy.common.theme.White
 import com.example.sharerecipy.R.drawable as AppIcon
 
@@ -34,19 +36,20 @@ fun EmailField(
         label = {
             Text(
                 text = stringResource(text),
-                color = White
+                fontFamily = FontFamily.Serif,
+                color = Navy
             )
         },
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            textColor = White,
-            focusedBorderColor = White,
-            unfocusedBorderColor = White
+            textColor = Navy,
+            focusedBorderColor = Navy,
+            unfocusedBorderColor = Navy
         ),
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Email,
                 contentDescription = "email",
-                tint = White
+                tint = Navy
             )
         }
     )
@@ -73,19 +76,20 @@ fun PasswordField(
         label = {
             Text(
                 text = stringResource(pw),
-                color = White
+                fontFamily = FontFamily.Serif,
+                color = Navy
             )
         },
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            textColor = White,
-            focusedBorderColor = White,
-            unfocusedBorderColor = White
+            textColor = Navy,
+            focusedBorderColor = Navy,
+            unfocusedBorderColor = Navy
         ),
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Lock,
                 contentDescription = "Lock",
-                tint = White) },
+                tint = Navy) },
         trailingIcon = {
             IconButton(onClick = { isVisible = !isVisible }) {
                 Icon(painter = icon, contentDescription = "Visibility")
@@ -109,19 +113,20 @@ fun NameField(
         label = {
             Text(
                 text = stringResource(text),
-                color = White
+                fontFamily = FontFamily.Serif,
+                color = Navy
             )
         },
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            textColor = White,
-            focusedBorderColor = White,
-            unfocusedBorderColor = White
+            textColor = Navy,
+            focusedBorderColor = Navy,
+            unfocusedBorderColor = Navy
         ),
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Man,
                 contentDescription = "name",
-                tint = White
+                tint = Navy
             )
         }
     )
