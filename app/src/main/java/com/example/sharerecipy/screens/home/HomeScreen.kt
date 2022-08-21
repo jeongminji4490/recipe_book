@@ -1,7 +1,6 @@
 package com.example.sharerecipy.screens.home
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -17,13 +16,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.sharerecipy.HOME_SCREEN
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.sharerecipy.*
 import com.example.sharerecipy.R.*
-import com.example.sharerecipy.RECIPE_SCREEN
-import com.example.sharerecipy.SETTING_SCREEN
-import com.example.sharerecipy.WISH_LIST_SCREEN
 import com.example.sharerecipy.common.composable.CardComposable
 import com.example.sharerecipy.common.composable.IconOutlinedButton
+import com.example.sharerecipy.common.composable.TestCardComposable
 import com.example.sharerecipy.common.composable.Toolbar
 import com.example.sharerecipy.common.theme.*
 import com.example.sharerecipy.screens.drawer.Drawer
@@ -39,10 +37,9 @@ fun HomeScreen(
     openAndPopUp: (String, String) -> Unit
 ) {
     val currentUser = Firebase.auth.currentUser // 로그인한 사용자
-    var email by rememberSaveable { mutableStateOf("") }
     var name by rememberSaveable { mutableStateOf("") } // 닉네임
+    val scrollState = rememberScrollState()
 
-    email = currentUser?.email.toString() // 사용자 이메일 가져오기
     name = currentUser?.displayName.toString()
 
     Surface(color = MaterialTheme.colors.background) {
@@ -53,7 +50,6 @@ fun HomeScreen(
                 drawerState.open()
             }
         }
-
         ModalDrawer(
             drawerState = drawerState,
             gesturesEnabled = drawerState.isOpen,
@@ -82,51 +78,33 @@ fun HomeScreen(
                         .background(Beige)
                         .padding(it)
                 ) {
-                    HomeContent(email, name, openAndPopUp)
+                    HomeContent(name, scrollState, openAndPopUp)
                 }
             }
         }
     }
-
-//    Scaffold(
-//        topBar = {
-//            Toolbar(AppText.home, Icons.Filled.Menu) {
-//                openDrawer()
-//            }
-//        }
-//    ) {
-//        Column(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .background(Beige)
-//                .padding(it)
-//        ) {
-//            HomeContent(email, name, openAndPopUp)
-//        }
-//    }
 }
 
 @Composable
 fun HomeContent(
-    email: String,
     name: String,
+    scrollState: ScrollState,
     openAndPopUp: (String, String) -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
+    val viewModel: HomeViewModel = hiltViewModel()
+
+    Column{
         Row(
             modifier = Modifier
-                .padding(20.dp)
+                .fillMaxWidth()
+                .padding(top = 20.dp, start = 20.dp)
         ) {
-            Text( // 이메일
-                text = "Hi, ",
+            Text(
+                text = stringResource(AppText.hi),
                 textAlign = TextAlign.Left,
                 color = Navy,
                 fontSize = 20.sp,
-                fontFamily = FontFamily.Serif,
-                fontWeight = FontWeight.SemiBold
+                fontFamily = LightFont
             )
             Spacer(Modifier.width(5.dp))
             Text( // 닉네임
@@ -134,73 +112,110 @@ fun HomeContent(
                 textAlign = TextAlign.Left,
                 color = Navy,
                 fontSize = 20.sp,
-                fontFamily = FontFamily.Serif,
-                fontWeight = FontWeight.Medium
+                fontFamily = BoldFont
             )
-            //Spacer(modifier = Modifier.height(10.dp))
-//            CardComposable(AppText.show_recipe) { openAndPopUp(RECIPE_SCREEN, HOME_SCREEN) }
-//            CardComposable(AppText.my_recipe) { }
+            Text( // 닉네임
+                text = stringResource(AppText._hi),
+                textAlign = TextAlign.Left,
+                color = Navy,
+                fontSize = 20.sp,
+                fontFamily = LightFont
+            )
+        }
+        Text(
+            text = stringResource(AppText.welcome),
+            textAlign = TextAlign.Left,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 5.dp, start = 20.dp),
+            color = Navy,
+            fontSize = 18.sp,
+            fontFamily = LightFont
+        )
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 20.dp, start = 20.dp),
+            horizontalArrangement = Arrangement.Start) {
+            Icon(
+                Icons.Filled.Circle,
+                "",
+                Modifier
+                    .size(15.dp)
+                    .padding(top = 8.dp),
+                tint = Navy)
+            Text(
+                text = stringResource(AppText.category),
+                textAlign = TextAlign.Left,
+                color = Navy,
+                fontSize = 20.sp,
+                fontFamily = BoldFont
+            )
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp, start = 20.dp, end = 20.dp)
+                .horizontalScroll(scrollState),
+            horizontalArrangement = Arrangement.SpaceBetween) {
+
+            TestCardComposable(AppText.rice, Icons.Filled.RiceBowl)
+            { viewModel.setRecipeType("밥", openAndPopUp) }
+
+            TestCardComposable(AppText.soup, Icons.Filled.SoupKitchen)
+            { viewModel.setRecipeType("국&찌개", openAndPopUp) }
+
+            TestCardComposable(AppText.side, Icons.Filled.EggAlt)
+            { viewModel.setRecipeType("반찬", openAndPopUp) }
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp, start = 20.dp, end = 20.dp)
+                .horizontalScroll(scrollState),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+
+            TestCardComposable(AppText.dessert, Icons.Filled.Cookie)
+            { viewModel.setRecipeType("후식", openAndPopUp) }
+
+            TestCardComposable(AppText.ilpoom, Icons.Filled.RamenDining)
+            { viewModel.setRecipeType("일품", openAndPopUp) }
+
+            Card(
+                modifier = Modifier
+                    .width(100.dp)
+                    .height(100.dp)
+                    .clickable { openAndPopUp(WISH_LIST_SCREEN, HOME_SCREEN) },
+                backgroundColor = Beige,
+                border = BorderStroke(2.dp, Navy),
+                shape = RoundedCornerShape(10.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(15.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = stringResource(AppText.wish_list),
+                        color = Navy,
+                        fontSize = 20.sp,
+                        fontFamily = BoldFont
+                    )
+                    Icon(
+                        imageVector = Icons.Filled.Favorite,
+                        contentDescription = null,
+                        modifier = Modifier.padding(top = 8.dp),
+                        tint = Navy)
+                }
+            }
         }
         Column(
             Modifier.padding(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+           // horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CardComposable(AppText.show_recipe) { openAndPopUp(RECIPE_SCREEN, HOME_SCREEN) }
-            CardComposable(AppText.my_recipe) { }
         }
     }
-//        Card( // 레시피 보기
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(15.dp)
-//                .clickable { openAndPopUp(RECIPE_SCREEN, HOME_SCREEN) },
-//            backgroundColor = LightOrange,
-//            //elevation = 0.dp,
-//            shape = RoundedCornerShape(10.dp)
-//        ) {
-//            Row(
-//                modifier = Modifier
-//                    .padding(15.dp),
-//                verticalAlignment = Alignment.CenterVertically
-//            ) {
-//                //Spacer(modifier = Modifier.width(10.dp))
-//                Text(
-//                    text = stringResource(AppText.show_recipe),
-//                    modifier = Modifier.fillMaxWidth(),
-//                    color = White,
-//                    fontSize = 15.sp,
-//                    fontWeight = FontWeight.Bold
-//                )
-//            }
-//        }
-//        IconOutlinedButton(
-//            AppText.show_recipe,
-//            LightOrange,
-//            LightOrange,
-//            White,
-//            White,
-//            Icons.Filled.OutdoorGrill,
-//            "recipe_list",
-//            Modifier
-//                .height(80.dp)
-//                .fillMaxWidth()
-//                .padding(15.dp)
-//        ) { openAndPopUp(RECIPE_SCREEN, HOME_SCREEN) }
-//        IconOutlinedButton(
-//            AppText.my_recipe,
-//            LightOrange,
-//            LightOrange,
-//            White,
-//            White,
-//            Icons.Filled.Grade,
-//            "my_recipe",
-//            Modifier
-//                .height(80.dp)
-//                .fillMaxWidth()
-//                .padding(15.dp)
-//        )
-//        { }
-
 }
 
 const val TAG = "HomeScreen"

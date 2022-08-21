@@ -19,7 +19,7 @@ import com.example.sharerecipy.R.string as AppText
 class AccountServiceImpl @Inject constructor() : AccountService {
 
     // 로그인
-    override fun authenticate(
+    override fun login(
         email: String,
         password: String,
         context: Context,
@@ -28,13 +28,13 @@ class AccountServiceImpl @Inject constructor() : AccountService {
         if (email.isNotEmpty() && password.isNotEmpty()){
             Firebase.auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
-                    if (task.isSuccessful){ // 성공 시 메인화면으로 이동
+                    if (task.isSuccessful){ // 로그인 성공
                         Toast.makeText(
                             context,
                             AppText.sign_in,
                             Toast.LENGTH_SHORT).show()
                         openAndPopUp(HOME_SCREEN, LOGIN_SCREEN)
-                    }else { // 실패 시 진행바 중지 & 에러 토스트
+                    }else { // 로그인 실패 실패
                         try{
                             throw task.exception!!
                         }catch (e : FirebaseAuthInvalidUserException){
@@ -54,7 +54,7 @@ class AccountServiceImpl @Inject constructor() : AccountService {
         }
     }
 
-    // 계정 생성
+    // 회원가입
     override fun createAccount(
         email: String,
         name: String,
@@ -69,29 +69,29 @@ class AccountServiceImpl @Inject constructor() : AccountService {
             if (email.isNotEmpty() && password.isNotEmpty()){
                 Firebase.auth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
-                        if (task.isSuccessful) { // 성공 시 회원가입 완료
+                        if (task.isSuccessful) { // 회원가입 성공
                             val db = Firebase.firestore
-                            val users = db.collection("user")
-//                            val wishList = hashMapOf(
-//                                "wish list" to arrayListOf<String>(),
-//                            )
-                            val wishList = hashMapOf(
-                                "wish list" to arrayListOf<Map<String, String>>(),
-                                //"wish list" to arrayMapOf<String, String>()
+                            val users = db.collection("user").document(email)
+                            // 하위 컬렉션(wish list) -> 문서(레시피명), 필드(재료, 레시피 종류)
+                            // 하위 컬렉션에 sample 문서 저장
+                            val docRef = users.collection("wish list").document("sample")
+                            val data = hashMapOf(
+                                "ingredients" to null,
+                                "type" to null
                             )
-                            // wishList 객체를 파이어스토어의 user 컬렉션에 email 이라는 document 로 저장
-                            users.document(email).set(wishList)
-                                .addOnSuccessListener { it ->
+                            docRef.set(data)
+                                .addOnSuccessListener {
                                     Log.i(TAG, "DocumentSnapshot added with ID: $it")
                                 }.addOnFailureListener { e ->
                                     Log.w(TAG, "Error adding document", e)
                                 }
+                            // 회원정보 업데이트
                             val newProfile = UserProfileChangeRequest.Builder().setDisplayName(name).build()
                             Firebase.auth.currentUser?.updateProfile(newProfile)
                             Toast.makeText(context, AppText.complete_creation, Toast.LENGTH_SHORT)
                                 .show()
-                            openAndPopUp(LOGIN_SCREEN, SIGNUP_SCREEN) // 로그인 화면으로 이동
-                        }else { // 실패 시 에러 토스트
+                            openAndPopUp(LOGIN_SCREEN, SIGNUP_SCREEN)
+                        }else { // 회원가입 실패
                             try {
                                 throw task.exception!!
                             }catch (e: FirebaseAuthUserCollisionException){
@@ -119,7 +119,7 @@ class AccountServiceImpl @Inject constructor() : AccountService {
             Firebase.auth.currentUser!!.delete()
                 .addOnCompleteListener {
                     val db = Firebase.firestore
-                    db.collection("user").document(email) // 관련 정보 삭제
+                    db.collection("user").document(email) // 관련 문서 삭제
                         .delete()
                         .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully deleted!") }
                         .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
@@ -130,19 +130,20 @@ class AccountServiceImpl @Inject constructor() : AccountService {
     }
 
     // 로그아웃
-    override fun signOut(context: Context, openAndPopUp: (String, String) -> Unit) { // 메인화면으로 이동
+    override fun logout(context: Context, openAndPopUp: (String, String) -> Unit) { // 메인화면으로 이동
         Firebase.auth.signOut()
         Toast.makeText(context, AppText.logout, Toast.LENGTH_SHORT).show()
         openAndPopUp(LOGIN_SCREEN, HOME_SCREEN) // 로그인 화면으로 이동
     }
 
+    // 자동 로그인
     override fun autoLogin(openAndPopUp: (String, String) -> Unit) {
         val currentUser = Firebase.auth.currentUser
         if (currentUser!=null)
             openAndPopUp(HOME_SCREEN, LOGIN_SCREEN)
     }
 
-    override fun editProfile( // 회원정보 수정
+    override fun editProfile( // 회원정보 변경
         context: Context,
         name: String,
         password: String,
@@ -151,14 +152,14 @@ class AccountServiceImpl @Inject constructor() : AccountService {
         val currentUser = Firebase.auth.currentUser
         if (currentUser != null){
             val newProfile = UserProfileChangeRequest.Builder().setDisplayName(name).build()
-            currentUser.updateProfile(newProfile)
-            currentUser.updatePassword(password)
+            currentUser.updateProfile(newProfile) // 닉네임 변경
+            currentUser.updatePassword(password) // 비밀번호 변경
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful){
                         Toast.makeText(context, AppText.complete_edit, Toast.LENGTH_SHORT)
                             .show()
-                        openAndPopUp(LOGIN_SCREEN, EDIT_PROFILE_SCREEN) // 로그인 화면으로 이동
-                    }else {
+                        openAndPopUp(LOGIN_SCREEN, EDIT_PROFILE_SCREEN)
+                    }else { // 변경 실패
                         try {
                             throw task.exception!!
                         }catch (e: FirebaseAuthWeakPasswordException) {

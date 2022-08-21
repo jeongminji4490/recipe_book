@@ -12,7 +12,8 @@ import java.io.IOException
 
 class DataStore(private val context: Context) {
     private val Context.datastore by preferencesDataStore(name = "datastore")
-    private val key = stringPreferencesKey("RECIPE_NAME")
+    private val nameKey = stringPreferencesKey("RECIPE_NAME")
+    private val typeKey = stringPreferencesKey("TYPE_NAME")
 
     val recipeName : Flow<String> = context.datastore.data
         .catch { exception ->
@@ -22,12 +23,29 @@ class DataStore(private val context: Context) {
                 throw exception
             }
         }.map {
-            it[key] ?: ""
+            it[nameKey] ?: ""
+        }
+
+    val typeName : Flow<String> = context.datastore.data
+        .catch { exception ->
+            if (exception is IOException){
+                emit(emptyPreferences())
+            }else{
+                throw exception
+            }
+        }.map {
+            it[typeKey] ?: ""
         }
 
     suspend fun setRecipeName(recipeName : String){
         context.datastore.edit {
-            it[key] = recipeName
+            it[nameKey] = recipeName
+        }
+    }
+
+    suspend fun setRecipeType(recipeType : String){
+        context.datastore.edit {
+            it[typeKey] = recipeType
         }
     }
 

@@ -5,8 +5,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sharerecipy.*
@@ -25,69 +23,88 @@ import javax.inject.Inject
 @HiltViewModel
 class RecipeViewModel @Inject constructor(
     private val service: RepositoryService,
-    private val dataStore: DataStore,
+    private val dataStore: DataStore
 ) : ViewModel() {
 
     var recipeList: MutableState<RecipeList?> = mutableStateOf(null)
-    var wishList = mutableStateMapOf<String, String>()
-    var methodList = mutableStateListOf<String>()
+    var wishList = mutableStateMapOf<String, List<String>>()
     var info: MutableState<Recipe?> = mutableStateOf(null)
+    //var infoTest: MutableState<Inf?> = mutableStateOf(null)
+    var type: MutableState<String> = mutableStateOf("")
 
-    // onEach vs collect
-    suspend fun getRecipe() {
+    suspend fun getRecipe() { // 레시피 목록 조회
         viewModelScope.launch {
-            service.getRecipe().onEach {
+            service.getRecipe().collect() {
                 recipeList.value = it
-            }.launchIn(viewModelScope)
+            }
+//            service.getRecipe().onEach {
+//                recipeList.value = it
+//            }.launchIn(viewModelScope)
         }
     }
 
-    suspend fun getWishList() {
+    suspend fun getWishList() { // 찜한 레시피 조회
         viewModelScope.launch {
             service.getWishList().collect() {
-                //val newString = it?.replace("[", "")?.replace("]", "")?.split(", ")
-                val newString = it?.split("}, ")
-                newString?.forEach { string ->
-                    val list = string.replace("[{", "").replace("{", "").replace("}]", "").split("=")
-                    wishList[list[0]] = list[1]
-                    //methodList.add(list[1])
+                if (it != null) {
+                    wishList[it["name"].toString()] =
+                        listOf(it["ingredients"].toString(), it["type"].toString())
                 }
-//                newString?.forEach { name ->
-//                    wishList.add(name)
-//                }
             }
+
         }
     }
+
+//    fun getInfo() { // 특정 레시피의 조리 방법 조회
+//        viewModelScope.launch {
+//            val name = dataStore.recipeName.first()
+//            service.getRecipe().collect() {
+//                if (it != null) {
+//                    for (i in it.list.recipes.indices) {
+//                        if (name == it.list.recipes[i].name) {
+//                            info.value = it.list.recipes[i]
+//                            break
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     fun getInfo() {
         viewModelScope.launch {
             val name = dataStore.recipeName.first()
-            service.getRecipe().collect() {
-                if (it != null) {
-                    for (i in it.list.recipes.indices) {
-                        if (name == it.list.recipes[i].name) {
-                            info.value = it.list.recipes[i]
-                            break
-                        }
-                    }
+            val newString = name.replace(" ", "_")
+            var convertedName = newString
+            if (newString.contains("_&"))
+                convertedName = newString.split("_&")[0]
+
+            service.getInfo(convertedName).collect() {
+                if (it != null){
+                    info.value = it.list.recipes.first()
                 }
             }
         }
     }
 
-    fun addWishRecipe(name: String, ingredients: String) {
-        service.addWishRecipe(name, ingredients)
+    fun addWishRecipe(name: String, ingredients: String, type: String) { // 레시피 찜목록에 추가
+        service.addWishRecipe(name, ingredients, type)
     }
 
-    fun deleteWishRecipe(name: String,  ingredients: String) {
-        service.deleteWishRecipe(name, ingredients)
+    fun deleteWishRecipe(name: String) { // 레시피 찜목록에서 삭제
+        service.deleteWishRecipe(name)
     }
 
-    fun setRecipeName(name: String, openScreen: (String) -> Unit,) {
+    fun getRecipeType() { // 레시피 종류 조회
+        viewModelScope.launch {
+            type.value = dataStore.typeName.first()
+        }
+    }
+
+    fun setRecipeName(name: String, openScreen: (String) -> Unit) { // 레시피명 저장
         viewModelScope.launch {
             dataStore.setRecipeName(name)
-            //openAndPopUp(RECIPE_DETAIL_SCREEN, RECIPE_SCREEN)
-            openScreen(RECIPE_DETAIL_SCREEN)
+            openScreen(RECIPE_DETAIL_SCREEN) // name 에 해당하는 레시피 조리방법 조회
         }
     }
 

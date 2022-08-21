@@ -27,6 +27,9 @@ import com.example.sharerecipy.R.string as AppText
 import com.example.sharerecipy.common.composable.ManualImageComposable
 import com.example.sharerecipy.common.composable.ManualTextComposable
 import com.example.sharerecipy.common.composable.Toolbar
+import com.example.sharerecipy.common.theme.Beige
+import com.example.sharerecipy.common.theme.BoldFont
+import com.example.sharerecipy.common.theme.Navy
 
 @Composable
 fun RecipeDetailScreen(
@@ -34,6 +37,7 @@ fun RecipeDetailScreen(
 ) {
     val viewModel: RecipeViewModel = hiltViewModel()
     val scrollState = rememberScrollState()
+    //val list = viewModel.info
     val list = viewModel.info
 
     LaunchedEffect(true) {
@@ -43,7 +47,6 @@ fun RecipeDetailScreen(
     Scaffold(
         topBar = {
             Toolbar(AppText.method, Icons.Filled.ArrowBack) {
-                //openAndPopUp(RECIPE_SCREEN, RECIPE_DETAIL_SCREEN)
                 popUpScreen()
             }
         },
@@ -53,7 +56,7 @@ fun RecipeDetailScreen(
                     .fillMaxSize()
                     .padding(it)
                     .verticalScroll(scrollState)
-                    .background(colorResource(R.color.white))
+                    .background(Beige)
             ) {
                 list.value?.let { data ->
                     RecipeDetailContent(data)
@@ -72,74 +75,73 @@ fun RecipeDetailContent(detail: Recipe) {
             text = detail.name,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(15.dp)
-                .background(colorResource(AppColor.lightOrange)),
+                .padding(15.dp),
             textAlign = TextAlign.Center,
-            color = Color.White,
+            color = Navy,
             fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
+            fontFamily = BoldFont
         )
         Spacer(modifier = Modifier.height(10.dp))
 
         // 메뉴얼
-        if (detail.manual1_img != "") ManualImageComposable(detail.manual1_img)
-        if (detail.manual1 != "") ManualTextComposable(detail.manual1)
+        ManualImageComposable(detail.manual1_img)
+        ManualTextComposable(detail.manual1)
 
-        if (detail.manual2_img != "") ManualImageComposable(detail.manual2_img)
-        if (detail.manual2 != "") ManualTextComposable(detail.manual2)
+        ManualImageComposable(detail.manual2_img)
+        ManualTextComposable(detail.manual2)
 
-        if (detail.manual3_img != "") ManualImageComposable(detail.manual3_img)
-        if (detail.manual3 != "") ManualTextComposable(detail.manual3)
+        ManualImageComposable(detail.manual3_img)
+        ManualTextComposable(detail.manual3)
 
-        if (detail.manual4_img != "") ManualImageComposable(detail.manual4_img)
-        if (detail.manual4 != "") ManualTextComposable(detail.manual4)
+        ManualImageComposable(detail.manual4_img)
+        ManualTextComposable(detail.manual4)
 
-        if (detail.manual5_img != "") ManualImageComposable(detail.manual5_img)
-        if (detail.manual5 != "") ManualTextComposable(detail.manual5)
+        ManualImageComposable(detail.manual5_img)
+        ManualTextComposable(detail.manual5)
 
-        if (detail.manual6_img != "") ManualImageComposable(detail.manual6_img)
-        if (detail.manual6 != "") ManualTextComposable(detail.manual6)
+        ManualImageComposable(detail.manual6_img)
+        ManualTextComposable(detail.manual6)
 
-        if (detail.manual7_img != "") ManualImageComposable(detail.manual7_img)
-        if (detail.manual7 != "") ManualTextComposable(detail.manual7)
+        ManualImageComposable(detail.manual7_img)
+        ManualTextComposable(detail.manual7)
 
-        if (detail.manual8_img != "") ManualImageComposable(detail.manual8_img)
-        if (detail.manual8 != "") ManualTextComposable(detail.manual8)
+        ManualImageComposable(detail.manual8_img)
+        ManualTextComposable(detail.manual8)
 
-        if (detail.manual9_img != "") ManualImageComposable(detail.manual9_img)
-        if (detail.manual9 != "") ManualTextComposable(detail.manual9)
+        ManualImageComposable(detail.manual9_img)
+        ManualTextComposable(detail.manual9)
 
-        if (detail.manual10_img != "") ManualImageComposable(detail.manual10_img)
-        if (detail.manual10 != "") ManualTextComposable(detail.manual10)
+        ManualImageComposable(detail.manual10_img)
+        ManualTextComposable(detail.manual10)
 
-        if (detail.manual11_img != "") ManualImageComposable(detail.manual11_img)
-        if (detail.manual11 != "") ManualTextComposable(detail.manual11)
+        ManualImageComposable(detail.manual11_img)
+        ManualTextComposable(detail.manual11)
 
-        if (detail.manual12_img != "") ManualImageComposable(detail.manual12_img)
-        if (detail.manual12 != "") ManualTextComposable(detail.manual12)
+        ManualImageComposable(detail.manual12_img)
+        ManualTextComposable(detail.manual12)
 
-        if (detail.manual13_img != "") ManualImageComposable(detail.manual13_img)
-        if (detail.manual13 != "") ManualTextComposable(detail.manual13)
+        ManualImageComposable(detail.manual13_img)
+        ManualTextComposable(detail.manual13)
 
-        if (detail.manual14_img != "") ManualImageComposable(detail.manual14_img)
-        if (detail.manual14 != "") ManualTextComposable(detail.manual14)
+        ManualImageComposable(detail.manual14_img)
+        ManualTextComposable(detail.manual14)
 
-        if (detail.manual15_img != "") ManualImageComposable(detail.manual15_img)
-        if (detail.manual15 != "") ManualTextComposable(detail.manual15)
+        ManualImageComposable(detail.manual15_img)
+        ManualTextComposable(detail.manual15)
 
-        if (detail.manual16_img != "") ManualImageComposable(detail.manual16_img)
-        if (detail.manual16 != "") ManualTextComposable(detail.manual16)
+        ManualImageComposable(detail.manual16_img)
+        ManualTextComposable(detail.manual16)
 
-        if (detail.manual17_img != "") ManualImageComposable(detail.manual17_img)
-        if (detail.manual17 != "") ManualTextComposable(detail.manual17)
+        ManualImageComposable(detail.manual17_img)
+        ManualTextComposable(detail.manual17)
 
-        if (detail.manual18_img != "") ManualImageComposable(detail.manual18_img)
-        if (detail.manual18 != "") ManualTextComposable(detail.manual18)
+        ManualImageComposable(detail.manual18_img)
+        ManualTextComposable(detail.manual18)
 
-        if (detail.manual19_img != "") ManualImageComposable(detail.manual19_img)
-        if (detail.manual19 != "") ManualTextComposable(detail.manual19)
+        ManualImageComposable(detail.manual19_img)
+        ManualTextComposable(detail.manual19)
 
-        if (detail.manual20_img != "") ManualImageComposable(detail.manual20_img)
-        if (detail.manual20 != "") ManualTextComposable(detail.manual20)
+        ManualImageComposable(detail.manual20_img)
+        ManualTextComposable(detail.manual20)
     }
 }

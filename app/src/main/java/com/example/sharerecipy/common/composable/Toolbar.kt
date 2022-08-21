@@ -15,6 +15,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import com.example.sharerecipy.R
+import com.example.sharerecipy.common.theme.LightFont
 import com.example.sharerecipy.common.theme.LightOrange
 import com.example.sharerecipy.common.theme.Navy
 import com.example.sharerecipy.common.theme.White
@@ -26,7 +27,7 @@ fun Toolbar(
         title = {
             Text(
                 text = stringResource(title),
-                fontFamily = FontFamily.Serif
+                fontFamily = LightFont
             )
         },
         navigationIcon = { // 로그아웃 버튼(로그아웃 확인 다이얼로그?)

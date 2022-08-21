@@ -1,10 +1,13 @@
 package com.example.sharerecipy.screens.wish
 
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -24,6 +27,7 @@ import com.example.sharerecipy.R
 import com.example.sharerecipy.R.string as AppText
 import com.example.sharerecipy.RECIPE_SCREEN
 import com.example.sharerecipy.WISH_LIST_SCREEN
+import com.example.sharerecipy.common.composable.ChipComposable
 import com.example.sharerecipy.common.composable.Dialog
 import com.example.sharerecipy.common.composable.Toolbar
 import com.example.sharerecipy.common.theme.*
@@ -37,8 +41,9 @@ fun WishListScreen(
 ) {
     val viewModel : RecipeViewModel = hiltViewModel()
     val wishList = viewModel.wishList
-    val w = wishList.keys.toList()
-    val n = wishList.values.toList()
+    val wishKeyList = wishList.keys.toList()
+    val scrollState = rememberScrollState()
+    var typeValue by rememberSaveable { mutableStateOf("All") }
 
     LaunchedEffect(true){
         wishList.clear()
@@ -55,14 +60,46 @@ fun WishListScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
-                .background(White)
+                .background(Navy)
         ) {
-            w.let {
+            Row(
+                modifier = Modifier
+                    .horizontalScroll(scrollState)
+                    .padding(15.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                ChipComposable(AppText.all) { typeValue = "All" }
+                Spacer(Modifier.width(5.dp))
+
+                ChipComposable(AppText.rice) { typeValue = "밥" }
+                Spacer(Modifier.width(5.dp))
+
+                ChipComposable(AppText.soup) { typeValue = "국&찌개"  }
+                Spacer(Modifier.width(5.dp))
+
+                ChipComposable(AppText.side) { typeValue = "반찬" }
+                Spacer(Modifier.width(5.dp))
+
+                ChipComposable(AppText.ilpoom) { typeValue = "일품" }
+                Spacer(Modifier.width(5.dp))
+
+                ChipComposable(AppText.dessert) { typeValue = "후식" }
+                Spacer(Modifier.width(5.dp))
+            }
+            wishKeyList.let {
                 LazyColumn {
                     items(it) { name ->
-                        val ingredients = wishList[name]
-                        if (ingredients != null)
-                            WishListCard(name, ingredients, openScreen)
+                        val ingredients = wishList[name]?.get(0)
+                        val type = wishList[name]?.get(1)
+                        if (typeValue == "All") {
+                            if (ingredients != null && type != null)
+                                WishListCard(name, ingredients, type, openScreen)
+                        }else {
+                            if (type == typeValue){
+                                if (ingredients != null)
+                                    WishListCard(name, ingredients, type, openScreen)
+                            }
+                        }
                     }
                 }
             }
@@ -74,6 +111,7 @@ fun WishListScreen(
 fun WishListCard(
     name: String,
     ingredients: String,
+    type: String,
     openScreen: (String) -> Unit
 ) {
     val viewModel: RecipeViewModel = hiltViewModel()
@@ -85,7 +123,8 @@ fun WishListCard(
             .wrapContentHeight()
             .fillMaxWidth()
             .padding(10.dp),
-        elevation = 10.dp
+        backgroundColor = Navy,
+        border = BorderStroke(1.dp, Beige),
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -102,7 +141,7 @@ fun WishListCard(
                     Icon(
                         Icons.Filled.Kitchen,
                         contentDescription = "",
-                        tint = CrimsonRed
+                        tint = Yellow
                     )
                 }
                 IconButton(
@@ -111,22 +150,22 @@ fun WishListCard(
                     Icon(
                         Icons.Filled.MenuBook,
                         contentDescription = "",
-                        tint = CrimsonRed
+                        tint = VividOrange
                     )
                 }
                 IconButton(
                     onClick = {
                         pickState.value = !pickState.value
                         if (pickState.value){
-                            viewModel.addWishRecipe(name, ingredients)
+                            viewModel.addWishRecipe(name, ingredients, type)
                         }else {
-                            viewModel.deleteWishRecipe(name, ingredients)
+                            viewModel.deleteWishRecipe(name)
                         } },
                 ) {
                     Icon(
                         Icons.Filled.Bookmark,
                         contentDescription = "",
-                        tint = if (!pickState.value) LightGray else CrimsonRed
+                        tint = if (!pickState.value) LightGray else Yellow
                     )
                 }
                 if (ingredientDialog.value) {
@@ -143,26 +182,10 @@ fun WishListCard(
             Text( // 레시피명
                 text = name,
                 textAlign = TextAlign.Left,
-                color = Black,
+                color = Beige,
                 fontSize = 15.sp,
-                fontWeight = FontWeight.Medium
+                fontFamily = LightFont
             )
-//            Icon(
-//                Icons.Filled.OutdoorGrill,
-//                contentDescription = "",
-//                tint = Black,
-//                modifier = Modifier
-//                    .align(Alignment.CenterVertically)
-//                    .padding(5.dp)
-//            )
-//            Icon(
-//                Icons.Filled.Favorite,
-//                contentDescription = "",
-//                tint = Red,
-//                modifier = Modifier
-//                    .align(Alignment.CenterVertically)
-//                    .padding(5.dp)
-//            )
         }
 
     }

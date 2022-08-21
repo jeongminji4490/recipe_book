@@ -19,7 +19,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.example.sharerecipy.LOGIN_SCREEN
 import com.skydoves.landscapist.glide.GlideImage
 import com.example.sharerecipy.R.*
@@ -62,16 +61,16 @@ fun LoginContent(
             textAlign = TextAlign.Center,
             color = Navy,
             fontFamily = FontFamily.Serif,
-            fontSize = 40.sp,
-            fontWeight = FontWeight.Bold)
+            fontWeight = FontWeight.Bold,
+            fontSize = 40.sp)
 
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(AppText.app_name_2),
             textAlign = TextAlign.Center,
             color = Navy,
-            fontFamily = FontFamily.Serif,
             fontSize = 40.sp,
+            fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.Bold)
 
         GlideImage(
@@ -110,3 +109,4 @@ fun LoginContent(
         Spacer(modifier = Modifier.height(10.dp))
     }
 }
+

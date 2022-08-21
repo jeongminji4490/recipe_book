@@ -18,10 +18,7 @@ import com.example.sharerecipy.LOGIN_SCREEN
 import com.example.sharerecipy.R.*
 import com.example.sharerecipy.SIGNUP_SCREEN
 import com.example.sharerecipy.common.composable.*
-import com.example.sharerecipy.common.theme.Beige
-import com.example.sharerecipy.common.theme.LightOrange
-import com.example.sharerecipy.common.theme.Navy
-import com.example.sharerecipy.common.theme.White
+import com.example.sharerecipy.common.theme.*
 import com.example.sharerecipy.R.string as AppText
 
 @Composable
@@ -61,7 +58,7 @@ fun SignUpContent(
             textAlign = TextAlign.Left,
             color = Navy,
             fontSize = 40.sp,
-            fontWeight = FontWeight.Bold
+            fontFamily = BoldFont
         )
 
         Spacer(modifier = Modifier.height(60.dp))
@@ -88,7 +85,7 @@ fun SignUpContent(
         Spacer(modifier = Modifier.height(10.dp))
 
         ColorButton( // 뒤로가기
-            AppText.cancel,
+            AppText.CANCEL,
             Modifier
                 .fillMaxWidth()
                 .height(60.dp),

@@ -1,6 +1,5 @@
 package com.example.sharerecipy.screens.drawer
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,30 +12,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role.Companion.Image
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sharerecipy.EDIT_PROFILE_SCREEN
 import com.example.sharerecipy.LOGIN_SCREEN
 import com.example.sharerecipy.R
-import com.example.sharerecipy.WISH_LIST_SCREEN
 import com.example.sharerecipy.common.composable.Dialog
-import com.example.sharerecipy.common.theme.Navy
-import com.example.sharerecipy.common.theme.Red
-import com.example.sharerecipy.common.theme.White
+import com.example.sharerecipy.common.theme.*
 import com.example.sharerecipy.screens.home.HomeViewModel
 
 sealed class DrawerScreens(val title: String, val route: String) {
-    object WishList : DrawerScreens("Wish List", WISH_LIST_SCREEN)
-    object EditProfile : DrawerScreens("Edit Profile", EDIT_PROFILE_SCREEN)
-    object Logout : DrawerScreens("Logout", LOGIN_SCREEN)
-    object Withdrawal : DrawerScreens("WithDrawal Account", LOGIN_SCREEN)
+    object EditProfile : DrawerScreens("내정보 수정", EDIT_PROFILE_SCREEN)
+    object Logout : DrawerScreens("로그아웃", LOGIN_SCREEN)
+    object Withdrawal : DrawerScreens("회원 탈퇴", LOGIN_SCREEN)
 }
 
 private val screens = listOf(
-    DrawerScreens.WishList,
     DrawerScreens.EditProfile,
     DrawerScreens.Logout,
     DrawerScreens.Withdrawal
@@ -63,11 +55,10 @@ fun Drawer(
             Text(
                 text = screen.title,
                 color = White,
-                fontSize = 18.sp,
-                fontFamily = FontFamily.Serif,
+                fontSize = 20.sp,
+                fontFamily = LightFont,
                 modifier = Modifier.clickable {
                     when (screen){
-                        DrawerScreens.WishList -> onDestinationClicked(screen.route)
                         DrawerScreens.EditProfile -> onDestinationClicked(screen.route)
                         DrawerScreens.Logout -> viewModel.logout(context, openAndPopUp)
                         DrawerScreens.Withdrawal -> withdrawalDialog.value = true
@@ -79,7 +70,7 @@ fun Drawer(
             Dialog(
                 R.string.withdrawal,
                 stringResource(R.string.withdrawal_dialog),
-                Red,
+                Navy,
                 Icons.Filled.ExitToApp,
                 { viewModel.accountWithdrawal(context, openAndPopUp) },
                 { withdrawalDialog.value = false }

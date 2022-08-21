@@ -5,37 +5,39 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cookie
+import androidx.compose.material.icons.filled.Tab
+import androidx.compose.material.icons.filled.Tag
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import com.example.sharerecipy.common.theme.Black
-import com.example.sharerecipy.common.theme.LightOrange
-import com.example.sharerecipy.common.theme.White
+import com.example.sharerecipy.common.theme.*
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ChipComposable(
     @StringRes text: Int,
-    icon: ImageVector,
     onClick: () -> Unit
 ) {
     Chip(
         onClick = onClick,
         border = BorderStroke(
-            ChipDefaults.OutlinedBorderSize,
-            LightOrange
+            width = ChipDefaults.OutlinedBorderSize,
+            color = Beige
         ),
         colors = ChipDefaults.chipColors(
-            backgroundColor = White,
-            contentColor = LightOrange
+            backgroundColor = Navy,
+            contentColor = Beige
         ),
         leadingIcon = {
             Icon(
-                icon,
+                imageVector = Icons.Filled.Tag,
                 contentDescription = ""
             )
         }
     ) {
-        Text(stringResource(text))
+        Text(
+            text = stringResource(text),
+            fontFamily = LightFont
+        )
     }
 }

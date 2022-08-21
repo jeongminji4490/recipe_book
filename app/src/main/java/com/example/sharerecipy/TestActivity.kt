@@ -14,12 +14,9 @@ import com.example.sharerecipy.screens.home.HomeScreen
 import com.example.sharerecipy.screens.home.HomeViewModel
 import com.example.sharerecipy.screens.login.LoginScreen
 import com.example.sharerecipy.screens.login.LoginViewModel
-import com.example.sharerecipy.screens.recipe.RecipeDetailScreen
-import com.example.sharerecipy.screens.recipe.RecipeScreen
-import com.example.sharerecipy.screens.recipe.RecipeViewModel
-import com.example.sharerecipy.screens.setting.EditProfileScreen
-import com.example.sharerecipy.screens.setting.SettingScreen
-import com.example.sharerecipy.screens.setting.SettingViewModel
+import com.example.sharerecipy.screens.recipe.*
+import com.example.sharerecipy.screens.profile.EditProfileScreen
+import com.example.sharerecipy.screens.profile.ProfileViewModel
 import com.example.sharerecipy.screens.signup.SignUpScreen
 import com.example.sharerecipy.screens.signup.SignUpViewModel
 import com.example.sharerecipy.screens.wish.WishListScreen
@@ -36,7 +33,7 @@ class TestActivity : AppCompatActivity() {
             val signUpViewModel = hiltViewModel<SignUpViewModel>()
             val homeViewModel = hiltViewModel<HomeViewModel>()
             val recipeViewModel = hiltViewModel<RecipeViewModel>()
-            val settingViewModel = hiltViewModel<SettingViewModel>()
+            val settingViewModel = hiltViewModel<ProfileViewModel>()
             val appState = TestAppState(navController)
             MaterialTheme {
                 NavigationComponent(
@@ -58,7 +55,7 @@ class TestActivity : AppCompatActivity() {
         loginViewModel: LoginViewModel,
         signUpViewModel: SignUpViewModel,
         homeViewModel: HomeViewModel,
-        settingViewModel: SettingViewModel,
+        settingViewModel: ProfileViewModel,
         recipeViewModel: RecipeViewModel,
         appState: TestAppState
     ) {
@@ -76,9 +73,6 @@ class TestActivity : AppCompatActivity() {
                 HomeScreen(
                     openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
             }
-            composable(SETTING_SCREEN) {
-                SettingScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
-            }
             composable(WISH_LIST_SCREEN){
                 WishListScreen(
                     openScreen = { route -> appState.navigate(route) },
@@ -90,7 +84,8 @@ class TestActivity : AppCompatActivity() {
             composable(RECIPE_SCREEN) {
                 RecipeScreen(
                     openScreen = { route -> appState.navigate(route) },
-                    openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
+                    openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) }
+                )
             }
             composable(RECIPE_DETAIL_SCREEN){
                 RecipeDetailScreen(

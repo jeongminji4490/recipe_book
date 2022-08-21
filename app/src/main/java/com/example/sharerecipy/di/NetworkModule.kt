@@ -1,6 +1,5 @@
 package com.example.sharerecipy.di
 
-import com.example.sharerecipy.RetrofitClient
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
