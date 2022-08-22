@@ -68,7 +68,7 @@ __3. 레시피 목록 조회__
 </p>
 
 + 500개의 레시피들을 카테고리별로(밥, 국&찌개, 반찬, 일품, 후식) 조회 가능
-+ Open API 사용 [식품의약품안전처_조리식품의 레시피 DB](https://www.foodsafetykorea.go.kr/api/newDatasetDetail.do#)
++ Open API 사용 [식품의약품안전처_조리식품의 레시피 DB](https://www.foodsafetykorea.go.kr/api/newDatasetDetail.do)
 + 원하는 레시피를 북마크 버튼으로 추가 또는 제거 가능
 
 __4. 레시피(조리 방법, 재료) 조회__
