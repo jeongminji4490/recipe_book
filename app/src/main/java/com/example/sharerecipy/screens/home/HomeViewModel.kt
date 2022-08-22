@@ -3,10 +3,7 @@ package com.example.sharerecipy.screens.home
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.sharerecipy.DataStore
-import com.example.sharerecipy.HOME_SCREEN
-import com.example.sharerecipy.RECIPE_DETAIL_SCREEN
-import com.example.sharerecipy.RECIPE_SCREEN
+import com.example.sharerecipy.*
 import com.example.sharerecipy.api.request.AccountService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -31,7 +28,7 @@ class HomeViewModel @Inject constructor(
     fun setRecipeType(recipeType: String, openAndPopUp: (String, String) -> Unit) {
         viewModelScope.launch {
             dataStore.setRecipeType(recipeType)
-            openAndPopUp(RECIPE_SCREEN, HOME_SCREEN)
+            openAndPopUp(RECIPE_LIST_SCREEN, HOME_SCREEN)
         }
     }
 }

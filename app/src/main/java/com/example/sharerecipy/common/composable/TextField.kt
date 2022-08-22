@@ -9,16 +9,13 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Man
 import androidx.compose.runtime.*
-import androidx.compose.runtime.R
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import com.example.sharerecipy.R.drawable as AppIcon
-import com.example.sharerecipy.R.font.*
 import com.example.sharerecipy.common.theme.*
 
 
@@ -128,30 +125,5 @@ fun NameField(
                 tint = Navy
             )
         }
-    )
-}
-
-@Composable
-fun BasicTextField(
-    @StringRes text: Int,
-    value: String,
-    onValueChange: (String) -> Unit
-) {
-    OutlinedTextField(
-        modifier = Modifier.fillMaxWidth(),
-        value = value,
-        onValueChange = onValueChange,
-        label = {
-            Text(
-                text = stringResource(text),
-                color = Black,
-                fontFamily = LightFont
-            )
-        },
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            textColor = Black,
-            focusedBorderColor = Black,
-            unfocusedBorderColor = Black
-        )
     )
 }

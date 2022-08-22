@@ -10,7 +10,7 @@ import retrofit2.http.Query
 interface RecipeService {
 
     @GET("api/{keyId}/{serviceId}/{dataType}/1/500/RCP_NM={name}")
-    suspend fun getRecipeInfo(
+    suspend fun getRecipe(
         @Path("keyId") keyId : String,
         @Path("serviceId") serviceId : String,
         @Path("dataType") dataType : String,
@@ -18,7 +18,7 @@ interface RecipeService {
     ): Response<RecipeList>
 
     @GET("api/{keyId}/{serviceId}/{dataType}/1/500/")
-    suspend fun getRecipes(
+    suspend fun getRecipeList(
         @Path("keyId") keyId : String,
         @Path("serviceId") serviceId : String,
         @Path("dataType") dataType : String

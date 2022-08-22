@@ -1,6 +1,5 @@
 package com.example.sharerecipy.screens.wish
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -12,26 +11,20 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sharerecipy.HOME_SCREEN
-import com.example.sharerecipy.R
 import com.example.sharerecipy.R.string as AppText
-import com.example.sharerecipy.RECIPE_SCREEN
 import com.example.sharerecipy.WISH_LIST_SCREEN
 import com.example.sharerecipy.common.composable.ChipComposable
 import com.example.sharerecipy.common.composable.Dialog
 import com.example.sharerecipy.common.composable.Toolbar
 import com.example.sharerecipy.common.theme.*
-import com.example.sharerecipy.screens.recipe.RecipeCard
 import com.example.sharerecipy.screens.recipe.RecipeViewModel
 
 @Composable
@@ -41,9 +34,9 @@ fun WishListScreen(
 ) {
     val viewModel : RecipeViewModel = hiltViewModel()
     val wishList = viewModel.wishList
-    val wishKeyList = wishList.keys.toList()
+    val wishKeyList = wishList.keys.toList() // 찜 목록의 key(레시피명) 리스트
     val scrollState = rememberScrollState()
-    var typeValue by rememberSaveable { mutableStateOf("All") }
+    var categoryValue by rememberSaveable { mutableStateOf("All") }
 
     LaunchedEffect(true){
         wishList.clear()
@@ -52,7 +45,7 @@ fun WishListScreen(
 
     Scaffold(
         topBar = {
-            Toolbar(AppText.wish_list_eng, Icons.Filled.ArrowBack) {
+            Toolbar(AppText.wish_list, Icons.Filled.ArrowBack) {
                 openAndPopUp(HOME_SCREEN, WISH_LIST_SCREEN) }
         }
     ) {
@@ -68,36 +61,23 @@ fun WishListScreen(
                     .padding(15.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                ChipComposable(AppText.all) { typeValue = "All" }
-                Spacer(Modifier.width(5.dp))
-
-                ChipComposable(AppText.rice) { typeValue = "밥" }
-                Spacer(Modifier.width(5.dp))
-
-                ChipComposable(AppText.soup) { typeValue = "국&찌개"  }
-                Spacer(Modifier.width(5.dp))
-
-                ChipComposable(AppText.side) { typeValue = "반찬" }
-                Spacer(Modifier.width(5.dp))
-
-                ChipComposable(AppText.ilpoom) { typeValue = "일품" }
-                Spacer(Modifier.width(5.dp))
-
-                ChipComposable(AppText.dessert) { typeValue = "후식" }
-                Spacer(Modifier.width(5.dp))
+                categories.forEach { category ->
+                    ChipComposable(category) { categoryValue = category }
+                    Spacer(Modifier.width(5.dp))
+                }
             }
-            wishKeyList.let {
+            wishKeyList.let { // 찜 목록 조회
                 LazyColumn {
                     items(it) { name ->
-                        val ingredients = wishList[name]?.get(0)
-                        val type = wishList[name]?.get(1)
-                        if (typeValue == "All") {
-                            if (ingredients != null && type != null)
-                                WishListCard(name, ingredients, type, openScreen)
-                        }else {
-                            if (type == typeValue){
+                        val ingredients = wishList[name]?.get(0) // 재료
+                        val category = wishList[name]?.get(1) // 카테고리
+                        if (categoryValue == "All") { // 모두 조회
+                            if (ingredients != null && category != null)
+                                WishListCard(name, ingredients, category, openScreen)
+                        }else { // 카테고리별 조회
+                            if (category == categoryValue){
                                 if (ingredients != null)
-                                    WishListCard(name, ingredients, type, openScreen)
+                                    WishListCard(name, ingredients, category, openScreen)
                             }
                         }
                     }
@@ -133,9 +113,8 @@ fun WishListCard(
             Row(
                 modifier = Modifier
                     .padding(10.dp),
-                //verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(
+                IconButton( // 재료
                     onClick = { ingredientDialog.value = true },
                 ) {
                     Icon(
@@ -144,7 +123,7 @@ fun WishListCard(
                         tint = Yellow
                     )
                 }
-                IconButton(
+                IconButton( // 레시피
                     onClick = { viewModel.setRecipeName(name, openScreen) },
                 ) {
                     Icon(
@@ -153,7 +132,7 @@ fun WishListCard(
                         tint = VividOrange
                     )
                 }
-                IconButton(
+                IconButton( // 북마크
                     onClick = {
                         pickState.value = !pickState.value
                         if (pickState.value){
@@ -168,7 +147,7 @@ fun WishListCard(
                         tint = if (!pickState.value) LightGray else Yellow
                     )
                 }
-                if (ingredientDialog.value) {
+                if (ingredientDialog.value) { // 재료 다이얼로그
                     Dialog(
                         AppText.ingredients_dialog,
                         ingredients,
@@ -190,5 +169,7 @@ fun WishListCard(
 
     }
 }
+
+val categories = listOf("All", "밥", "국&찌개", "반찬", "일품", "후식")
 
 const val TAG = "WishListScreen"

@@ -8,13 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#ff0000</color>
-    <color name="mint">#76D7C4</color>
     <color name="lightGray">#ECF0F1</color>
-    <color name="crimsonRed">#EC7063</color>
     <color name="vividOrange">#F95700</color>
-    <color name="greenApple">#A4EFC4</color>
-    <color name="babyNavy">#A4AAEF</color>
     <color name="navy">#1e3d59</color>
-    <color name="deepPink">#E9A4EF</color>
-    <color name="lightOrange">#FF9A59</color>
+    <color name="beige">#F5F0E1</color>
 </resources>

@@ -26,24 +26,20 @@ class RecipeViewModel @Inject constructor(
     private val dataStore: DataStore
 ) : ViewModel() {
 
-    var recipeList: MutableState<RecipeList?> = mutableStateOf(null)
-    var wishList = mutableStateMapOf<String, List<String>>()
-    var info: MutableState<Recipe?> = mutableStateOf(null)
-    //var infoTest: MutableState<Inf?> = mutableStateOf(null)
-    var type: MutableState<String> = mutableStateOf("")
+    var recipeList: MutableState<RecipeList?> = mutableStateOf(null) // 레시피 목록
+    var wishList = mutableStateMapOf<String, List<String>>() // 찜 목록
+    var recipe: MutableState<Recipe?> = mutableStateOf(null) // 레시피
+    var category: MutableState<String> = mutableStateOf("") // 레시피 종류
 
-    suspend fun getRecipe() { // 레시피 목록 조회
+    suspend fun getRecipeList() { // 레시피 목록 조회
         viewModelScope.launch {
-            service.getRecipe().collect() {
+            service.getRecipeList().collect() {
                 recipeList.value = it
             }
-//            service.getRecipe().onEach {
-//                recipeList.value = it
-//            }.launchIn(viewModelScope)
         }
     }
 
-    suspend fun getWishList() { // 찜한 레시피 조회
+    suspend fun getWishList() { // 찜한 레시피 목록 조회
         viewModelScope.launch {
             service.getWishList().collect() {
                 if (it != null) {
@@ -55,23 +51,7 @@ class RecipeViewModel @Inject constructor(
         }
     }
 
-//    fun getInfo() { // 특정 레시피의 조리 방법 조회
-//        viewModelScope.launch {
-//            val name = dataStore.recipeName.first()
-//            service.getRecipe().collect() {
-//                if (it != null) {
-//                    for (i in it.list.recipes.indices) {
-//                        if (name == it.list.recipes[i].name) {
-//                            info.value = it.list.recipes[i]
-//                            break
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-
-    fun getInfo() {
+    fun getRecipe() { // 레시피 조회
         viewModelScope.launch {
             val name = dataStore.recipeName.first()
             val newString = name.replace(" ", "_")
@@ -79,9 +59,9 @@ class RecipeViewModel @Inject constructor(
             if (newString.contains("_&"))
                 convertedName = newString.split("_&")[0]
 
-            service.getInfo(convertedName).collect() {
+            service.getRecipe(convertedName).collect() {
                 if (it != null){
-                    info.value = it.list.recipes.first()
+                    recipe.value = it.list.recipes.first()
                 }
             }
         }
@@ -97,14 +77,14 @@ class RecipeViewModel @Inject constructor(
 
     fun getRecipeType() { // 레시피 종류 조회
         viewModelScope.launch {
-            type.value = dataStore.typeName.first()
+            category.value = dataStore.typeName.first()
         }
     }
 
     fun setRecipeName(name: String, openScreen: (String) -> Unit) { // 레시피명 저장
         viewModelScope.launch {
             dataStore.setRecipeName(name)
-            openScreen(RECIPE_DETAIL_SCREEN) // name 에 해당하는 레시피 조리방법 조회
+            openScreen(RECIPE_SCREEN) // name 에 해당하는 레시피 조리방법 조회
         }
     }
 

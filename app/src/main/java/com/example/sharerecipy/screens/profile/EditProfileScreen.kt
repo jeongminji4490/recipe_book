@@ -32,22 +32,12 @@ import com.google.firebase.ktx.Firebase
 fun EditProfileScreen(
     openAndPopUp: (String, String) -> Unit
 ) {
-    val currentUser = Firebase.auth.currentUser // 로그인한 사용자
-    var email by rememberSaveable { mutableStateOf("") } // 이메일
-    var name by rememberSaveable { mutableStateOf("") } // 닉네임
-    var password by rememberSaveable { mutableStateOf("") } // 비밀번호
-    var confirmPw by rememberSaveable { mutableStateOf("") } // 비밀번호 확인
-
-    email = currentUser?.email.toString()
-    name = currentUser?.displayName.toString()
-
     Scaffold(
         topBar = {
             Toolbar(AppText.edit_profile, Icons.Filled.ArrowBack) {
                 openAndPopUp(HOME_SCREEN, EDIT_PROFILE_SCREEN)
             }
         },
-        //backgroundColor = colorResource(R.color.white),
         content = { paddingValues ->
             Column(
                 modifier = Modifier
@@ -57,24 +47,23 @@ fun EditProfileScreen(
                     .padding(paddingValues),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                EditProfileContent(email, name, password, confirmPw, {name=it}, {password=it}, {confirmPw=it}, openAndPopUp)
+                EditProfileContent(openAndPopUp)
             }
         })
 }
 
 @Composable
 fun EditProfileContent(
-    email: String,
-    name: String,
-    password: String,
-    confirmPw: String,
-    onNameChange: (String) -> Unit,
-    onPwChange: (String) -> Unit,
-    onConfirmPwChange: (String) -> Unit,
     openAndPopUp: (String, String) -> Unit
 ) {
     val viewModel : ProfileViewModel = hiltViewModel()
     val context = LocalContext.current
+
+    val currentUser = Firebase.auth.currentUser
+    val email = currentUser?.email.toString() // 이메일 (변경 불가)
+    var name by rememberSaveable { mutableStateOf(currentUser?.displayName.toString()) } // 닉네임
+    var password by rememberSaveable { mutableStateOf("") } // 비밀번호
+    var confirmPw by rememberSaveable { mutableStateOf("") } // 비밀번호 확인
 
     Column(
         Modifier.padding(20.dp)
@@ -92,7 +81,7 @@ fun EditProfileContent(
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        Text(
+        Text( // 이메일
             modifier = Modifier.fillMaxWidth(),
             text = email,
             textAlign = TextAlign.Left,
@@ -103,22 +92,13 @@ fun EditProfileContent(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        NameField(
-            AppText.name,
-            name,
-            onNameChange)
-        PasswordField(
-            AppText.password,
-            password,
-            onPwChange)
-        PasswordField(
-            AppText.confirm_password,
-            confirmPw,
-            onConfirmPwChange)
+        NameField(AppText.name, name) { name = it }
+        PasswordField(AppText.password, password) { password = it }
+        PasswordField(AppText.confirm_password, confirmPw) { confirmPw = it }
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        ColorButton(
+        BasicButton(
             AppText.OK,
             Modifier
                 .fillMaxWidth()

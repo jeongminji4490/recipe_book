@@ -1,22 +1,46 @@
 package com.example.sharerecipy.common.composable
 
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Circle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.sharerecipy.common.theme.Black
-import com.example.sharerecipy.common.theme.LightFont
-import com.example.sharerecipy.common.theme.Navy
-import com.example.sharerecipy.common.theme.White
-import com.example.sharerecipy.R.string as AppText
+import com.example.sharerecipy.common.theme.*
+
+@Composable
+fun CategoryTextComposable(
+    @StringRes text: Int
+){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 20.dp, start = 20.dp),
+        horizontalArrangement = Arrangement.Start
+    ) {
+        Icon(
+            Icons.Filled.Circle,
+            "",
+            Modifier
+                .size(15.dp)
+                .padding(top = 8.dp),
+            tint = Navy
+        )
+        Text(
+            text = stringResource(text),
+            textAlign = TextAlign.Left,
+            color = Navy,
+            fontSize = 20.sp,
+            fontFamily = BoldFont
+        )
+    }
+}
 
 @Composable
 fun ManualTextComposable(

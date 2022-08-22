@@ -1,58 +1,26 @@
 package com.example.sharerecipy.common.composable
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Circle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.sharerecipy.HOME_SCREEN
-import com.example.sharerecipy.R
-import com.example.sharerecipy.RECIPE_SCREEN
 import com.example.sharerecipy.common.theme.*
 
 @Composable
-fun CardComposable(
-    @StringRes text: Int,
-    action: () -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(15.dp)
-            .clickable(onClick = action),
-        backgroundColor = LightOrange,
-        shape = RoundedCornerShape(10.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(15.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(text),
-                modifier = Modifier.fillMaxWidth(),
-                color = White,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-    }
-}
-
-@Composable
-fun TestCardComposable(
+fun MenuCardComposable(
     @StringRes text: Int,
     icon: ImageVector,
     action: () -> Unit
@@ -82,5 +50,32 @@ fun TestCardComposable(
                 modifier = Modifier.padding(top = 8.dp),
                 tint = Beige)
         }
+    }
+}
+
+@Composable
+fun ArticleCardComposable(
+    @StringRes text: Int,
+    uri: String
+) {
+    val uriHandler = LocalUriHandler.current
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 10.dp, start = 20.dp, end = 20.dp)
+            .clickable { uriHandler.openUri(uri) },
+        border = BorderStroke(2.dp, Navy),
+        shape = RoundedCornerShape(5.dp),
+        backgroundColor = Beige
+    ) {
+        Text(
+            text = stringResource(text),
+            modifier = Modifier.padding(10.dp),
+            textAlign = TextAlign.Center,
+            color = Navy,
+            fontSize = 17.sp,
+            fontFamily = BoldFont
+        )
     }
 }

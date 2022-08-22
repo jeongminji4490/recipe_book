@@ -20,11 +20,4 @@ class LoginViewModel @Inject constructor(
     ) {
         accountService.login(email, password, context, openAndPopUp)
     }
-
-    // 자동로그인
-    fun autoLogin(
-        openAndPopUp: (String, String) -> Unit
-    ){
-        accountService.autoLogin(openAndPopUp)
-    }
 }

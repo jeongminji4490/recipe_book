@@ -1,168 +1,140 @@
 package com.example.sharerecipy.screens.recipe
 
-import android.util.Log
-import androidx.compose.foundation.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.Bookmark
-import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.sharerecipy.*
 import com.example.sharerecipy.api.model.Recipe
-import com.example.sharerecipy.common.composable.BasicOutlinedButton
-import com.example.sharerecipy.common.composable.ChipComposable
-import com.example.sharerecipy.common.composable.Dialog
-import com.example.sharerecipy.common.composable.Toolbar
-import com.example.sharerecipy.common.theme.*
-import com.skydoves.landscapist.glide.GlideImage
 import com.example.sharerecipy.R.string as AppText
+import com.example.sharerecipy.common.composable.ManualImageComposable
+import com.example.sharerecipy.common.composable.ManualTextComposable
+import com.example.sharerecipy.common.composable.Toolbar
+import com.example.sharerecipy.common.theme.Beige
+import com.example.sharerecipy.common.theme.BoldFont
+import com.example.sharerecipy.common.theme.Navy
 
 @Composable
 fun RecipeScreen(
-    openScreen: (String) -> Unit,
-    openAndPopUp: (String, String) -> Unit
+    popUpScreen: () -> Unit
 ) {
     val viewModel: RecipeViewModel = hiltViewModel()
-    val recipeList = viewModel.recipeList
-    val wishList = viewModel.wishList
-    val type = viewModel.type
+    val scrollState = rememberScrollState()
+    val recipe = viewModel.recipe
 
     LaunchedEffect(true) {
         viewModel.getRecipe()
-        viewModel.getWishList()
-        viewModel.getRecipeType()
     }
-
-    var wishValue by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
-            Toolbar(AppText.recipe_list, Icons.Filled.ArrowBack) {
-                openAndPopUp(HOME_SCREEN, RECIPE_SCREEN)
+            Toolbar(AppText.method, Icons.Filled.ArrowBack) {
+                popUpScreen()
             }
-        }
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(it)
-                .background(Beige)
-        ) {
-            recipeList.value?.let {
-                LazyColumn {
-                    items(it.list.recipes) { item ->
-                        if (item.type == type.value) {
-                            wishList.keys.forEach { wishName ->
-                                if (item.name == wishName) {
-                                    wishValue = true
-                                    return@forEach
-                                }
-                            }
-                            RecipeCard(item, wishValue, openScreen)
-                            wishValue = false
-                        }
-                    }
+        },
+        content = {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it)
+                    .verticalScroll(scrollState)
+                    .background(Beige)
+            ) {
+                recipe.value?.let { recipe ->
+                    RecipeContent(recipe)
                 }
             }
         }
-    }
+    )
 }
 
 @Composable
-fun RecipeCard(
-    data: Recipe,
-    value: Boolean,
-    openScreen: (String) -> Unit
-) {
-    val viewModel: RecipeViewModel = hiltViewModel()
-    val ingredientDialog = remember { mutableStateOf(false) }
-    val pickState = remember { mutableStateOf(value) }
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(15.dp),
-        backgroundColor = Beige,
-        border = BorderStroke(2.dp, Navy)
+fun RecipeContent(recipe: Recipe) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            IconButton(
-                onClick = {
-                    pickState.value = !pickState.value
-                    if (pickState.value) {
-                        viewModel.addWishRecipe(data.name, data.ingredient, data.type)
-                    } else {
-                        viewModel.deleteWishRecipe(data.name)
-                    }
-                },
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Bookmark,
-                    contentDescription = "",
-                    tint = if (!pickState.value) LightGray else Navy
-                )
-            }
-            GlideImage( // 레시피 메인이미지
-                imageModel = data.imageUrl,
-                modifier = Modifier
-                    .height(150.dp)
-                    .width(210.dp)
-                    .padding(10.dp)
-            )
-            Text( // 레시피명
-                text = data.name,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                color = Color.Black,
-                fontSize = 18.sp,
-                fontFamily = BoldFont
-            )
-            Row(
-                modifier = Modifier.padding(5.dp)
-            ) {
-                BasicOutlinedButton( // 재료
-                    AppText.ingredients,
-                    Navy,
-                    Beige,
-                    Navy,
-                    Modifier.padding(5.dp)
-                ) { ingredientDialog.value = true }
-                Spacer(modifier = Modifier.width(10.dp))
-                BasicOutlinedButton( // 방법 -> 여기서 데이터스토어에 레시피명 저장
-                    AppText.how_to_cook,
-                    Beige,
-                    Navy,
-                    Navy,
-                    Modifier.padding(5.dp)
-                ) { viewModel.setRecipeName(data.name, openScreen) }
-            }
-            if (ingredientDialog.value) {
-                Dialog(
-                    AppText.ingredients_dialog,
-                    data.ingredient,
-                    Black,
-                    Icons.Filled.OutdoorGrill,
-                    { ingredientDialog.value = false },
-                    { ingredientDialog.value = false }
-                )
-            }
-        }
+        Text( // 레시피명
+            text = recipe.name,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(15.dp),
+            textAlign = TextAlign.Center,
+            color = Navy,
+            fontSize = 20.sp,
+            fontFamily = BoldFont
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+
+        // 조리 순서
+        ManualImageComposable(recipe.manual1_img)
+        ManualTextComposable(recipe.manual1)
+
+        ManualImageComposable(recipe.manual2_img)
+        ManualTextComposable(recipe.manual2)
+
+        ManualImageComposable(recipe.manual3_img)
+        ManualTextComposable(recipe.manual3)
+
+        ManualImageComposable(recipe.manual4_img)
+        ManualTextComposable(recipe.manual4)
+
+        ManualImageComposable(recipe.manual5_img)
+        ManualTextComposable(recipe.manual5)
+
+        ManualImageComposable(recipe.manual6_img)
+        ManualTextComposable(recipe.manual6)
+
+        ManualImageComposable(recipe.manual7_img)
+        ManualTextComposable(recipe.manual7)
+
+        ManualImageComposable(recipe.manual8_img)
+        ManualTextComposable(recipe.manual8)
+
+        ManualImageComposable(recipe.manual9_img)
+        ManualTextComposable(recipe.manual9)
+
+        ManualImageComposable(recipe.manual10_img)
+        ManualTextComposable(recipe.manual10)
+
+        ManualImageComposable(recipe.manual11_img)
+        ManualTextComposable(recipe.manual11)
+
+        ManualImageComposable(recipe.manual12_img)
+        ManualTextComposable(recipe.manual12)
+
+        ManualImageComposable(recipe.manual13_img)
+        ManualTextComposable(recipe.manual13)
+
+        ManualImageComposable(recipe.manual14_img)
+        ManualTextComposable(recipe.manual14)
+
+        ManualImageComposable(recipe.manual15_img)
+        ManualTextComposable(recipe.manual15)
+
+        ManualImageComposable(recipe.manual16_img)
+        ManualTextComposable(recipe.manual16)
+
+        ManualImageComposable(recipe.manual17_img)
+        ManualTextComposable(recipe.manual17)
+
+        ManualImageComposable(recipe.manual18_img)
+        ManualTextComposable(recipe.manual18)
+
+        ManualImageComposable(recipe.manual19_img)
+        ManualTextComposable(recipe.manual19)
+
+        ManualImageComposable(recipe.manual20_img)
+        ManualTextComposable(recipe.manual20)
     }
 }
-
-const val TAG = "RecipeScreen"

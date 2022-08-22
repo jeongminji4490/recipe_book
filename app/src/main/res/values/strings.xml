@@ -1,10 +1,10 @@
 <resources>
 
     <!-- Common -->
-    <string name="app_name">MY_RECIPE</string>
-    <string name="app_name_version_2">My Recipe</string>
-    <string name="app_name_1">MY</string>
-    <string name="app_name_2">RECIPE</string>
+    <string name="app_name">RECIPE BOOK</string>
+    <string name="app_name_version_2">Recipe Book</string>
+    <string name="app_name_1">RECIPE</string>
+    <string name="app_name_2">BOOK</string>
     <string name="email">이메일</string>
     <string name="password">비밀번호</string>
     <string name="OK">확인</string>
@@ -32,11 +32,14 @@
     <string name="_hi">님</string>
     <string name="welcome">오늘도 즐거운 요리 시간 보내세요.</string>
     <string name="category">카테고리</string>
+    <string name="news">뉴스</string>
     <string name="show_recipe">레시피 목록</string>
     <string name="my_recipe">내 레시피</string>
+    <string name="article1">한끼 든든 \'나혼자 식사\'…"요리 배우자" 자취생들 열공</string>
+    <string name="article2">"참치캔으로 브런치 가능" 자취생 취향 저격 참치버거 레시피</string>
 
     <!--Menu -->
-    <string name="wish_list">찜목록</string>
+    <string name="wish_list">북마크</string>
     <string name="edit_profile">내정보 수정</string>
     <string name="logout">로그아웃</string>
     <string name="withdrawal">회원 탈퇴</string>
@@ -63,7 +66,6 @@
     <string name="recipe_list">레시피 목록</string>
     <string name="method">조리 방법</string>
     <string name="setting_eng">설정</string>
-    <string name="wish_list_eng">찜목록</string>
     
     <!-- FireStore -->
     <string name="no_such_document">No such document</string>

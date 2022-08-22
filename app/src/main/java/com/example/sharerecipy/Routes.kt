@@ -10,5 +10,5 @@ const val WISH_LIST_SCREEN = "WishListScreen"
 
 const val EDIT_PROFILE_SCREEN = "EditProfileScreen"
 
+const val RECIPE_LIST_SCREEN = "RecipeListScreen"
 const val RECIPE_SCREEN = "RecipeScreen"
-const val RECIPE_DETAIL_SCREEN = "RecipeDetailScreen"

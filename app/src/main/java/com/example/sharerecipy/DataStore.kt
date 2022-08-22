@@ -15,6 +15,7 @@ class DataStore(private val context: Context) {
     private val nameKey = stringPreferencesKey("RECIPE_NAME")
     private val typeKey = stringPreferencesKey("TYPE_NAME")
 
+    // 레시피명
     val recipeName : Flow<String> = context.datastore.data
         .catch { exception ->
             if (exception is IOException){
@@ -26,6 +27,7 @@ class DataStore(private val context: Context) {
             it[nameKey] ?: ""
         }
 
+    // 레시피 카테고리
     val typeName : Flow<String> = context.datastore.data
         .catch { exception ->
             if (exception is IOException){

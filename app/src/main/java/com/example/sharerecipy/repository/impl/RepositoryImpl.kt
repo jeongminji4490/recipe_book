@@ -4,12 +4,9 @@ import android.util.Log
 import com.example.sharerecipy.BuildConfig
 import com.example.sharerecipy.api.model.RecipeList
 import com.example.sharerecipy.api.request.RecipeService
-import com.example.sharerecipy.api.request.impl.AccountServiceImpl
 import com.example.sharerecipy.repository.RepositoryService
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.getField
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -27,16 +24,15 @@ class RepositoryImpl @Inject constructor(
     private val dataType = "json"
 
     // 레시피 목록 조회
-    override suspend fun getRecipe(): Flow<RecipeList?> = flow {
+    override suspend fun getRecipeList(): Flow<RecipeList?> = flow {
         try {
-            val response = recipeService.getRecipes(keyId, serviceId, dataType)
+            val response = recipeService.getRecipeList(keyId, serviceId, dataType)
             if (response.isSuccessful){
                 val body = response.body()
                 body?.let { emit(body) }
             }
         }catch (e: Exception){
             Log.e("$TAG getRecipes()", e.toString())
-            //emit(null)
         }
     }
 
@@ -62,7 +58,6 @@ class RepositoryImpl @Inject constructor(
                 close()
             }.addOnFailureListener { e ->
                 Log.e(TAG, e.toString())
-                //trySend(null)
                 close()
             }
         awaitClose()
@@ -98,16 +93,16 @@ class RepositoryImpl @Inject constructor(
         docRef.delete()
     }
 
-    override suspend fun getInfo(name: String): Flow<RecipeList?> = flow {
+    // 레시피 조회
+    override suspend fun getRecipe(name: String): Flow<RecipeList?> = flow {
         try {
-            val response = recipeService.getRecipeInfo(keyId, serviceId, dataType, name)
+            val response = recipeService.getRecipe(keyId, serviceId, dataType, name)
             if (response.isSuccessful){
                 val body = response.body()
                 body?.let { emit(body) }
             }
         }catch (e: Exception){
             Log.e("$TAG getInfoTest()", e.toString())
-            //emit(null)
         }
     }
 

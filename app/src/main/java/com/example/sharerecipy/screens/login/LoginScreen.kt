@@ -1,7 +1,5 @@
 package com.example.sharerecipy.screens.login
 
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -9,9 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -28,29 +24,20 @@ import com.example.sharerecipy.common.theme.*
 import com.example.sharerecipy.R.string as AppText
 
 @Composable
-fun LoginScreen(openAndPopUp: (String, String) -> Unit) {
+fun LoginScreen(
+    viewModel: LoginViewModel = hiltViewModel(),
+    openAndPopUp: (String, String) -> Unit
+) {
     var email by rememberSaveable { mutableStateOf("") }
     var pw by rememberSaveable { mutableStateOf("") }
-    LoginContent(email, pw, {email=it}, {pw=it}, openAndPopUp)
-}
 
-// 자동 로그인 추가 ??
-@Composable
-fun LoginContent(
-    email: String,
-    pw: String,
-    onEmailChange: (String) -> Unit,
-    onPwChange: (String) -> Unit,
-    openAndPopUp: (String, String) -> Unit
-){
-    val viewModel: LoginViewModel = hiltViewModel()
     val context = LocalContext.current
 
     Column(modifier = Modifier
         .fillMaxWidth()
         .fillMaxHeight()
         .background(Beige)
-        .padding(20.dp), // Column 안에서 백그라운드 색 설정하면 스캐폴드에서 지정한 배경색 적용 X
+        .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(40.dp))
@@ -79,13 +66,13 @@ fun LoginContent(
                 .height(150.dp)
                 .width(210.dp))
 
-        EmailField( AppText.email, email, onEmailChange)
+        EmailField( AppText.email, email) { email = it }
 
-        PasswordField( AppText.password, pw, onPwChange)
+        PasswordField( AppText.password, pw) { pw = it }
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        ColorButton( // 로그인 버튼
+        BasicButton(
             AppText.sign_in,
             Modifier
                 .fillMaxWidth()
@@ -96,7 +83,7 @@ fun LoginContent(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        ColorButton( // 로그인 버튼
+        BasicButton(
             AppText.sign_up,
             Modifier
                 .fillMaxWidth()
@@ -104,7 +91,6 @@ fun LoginContent(
             Beige,
             Navy
         ) { openAndPopUp(SIGNUP_SCREEN, LOGIN_SCREEN) }
-
 
         Spacer(modifier = Modifier.height(10.dp))
     }

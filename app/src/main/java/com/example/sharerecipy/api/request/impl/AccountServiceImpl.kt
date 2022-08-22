@@ -136,13 +136,6 @@ class AccountServiceImpl @Inject constructor() : AccountService {
         openAndPopUp(LOGIN_SCREEN, HOME_SCREEN) // 로그인 화면으로 이동
     }
 
-    // 자동 로그인
-    override fun autoLogin(openAndPopUp: (String, String) -> Unit) {
-        val currentUser = Firebase.auth.currentUser
-        if (currentUser!=null)
-            openAndPopUp(HOME_SCREEN, LOGIN_SCREEN)
-    }
-
     override fun editProfile( // 회원정보 변경
         context: Context,
         name: String,
