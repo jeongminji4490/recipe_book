@@ -1,5 +1,5 @@
 <p align="center">
-  <img src = "https://user-images.githubusercontent.com/62979330/185958682-d25e9eb1-b41f-4df5-ad27-d7eec77f9329.png" width=75% height=75%>
+  <img src = "https://user-images.githubusercontent.com/62979330/185958682-d25e9eb1-b41f-4df5-ad27-d7eec77f9329.png">
 </p>
 
 <div align="center">
@@ -7,7 +7,7 @@
 </div>
 
 <div align="center">
-  500개의 요리 레시피들을 카테고리별로 볼 수 있고, 원하는 레시피들을 북마크해서 필요할 때마다 볼 수 있는 레시피 앱 
+  500개의 요리 레시피들을 카테고리별로 볼 수 있고, 원하는 레시피들을 북마크해서 볼 수 있는 레시피 앱 
 </div>
 
 ## Project Type
@@ -68,7 +68,7 @@ __3. 레시피 목록 조회__
 </p>
 
 + 500개의 레시피들을 카테고리별로(밥, 국&찌개, 반찬, 일품, 후식) 조회 가능
-+ Open API 사용 [식품의약품안전처_조리식품의 레시피 DB](https://www.foodsafetykorea.go.kr/api/newDatasetDetail.do)
++ Open API 사용 [식품의약품안전처_조리식품의 레시피 DB]
 + 원하는 레시피를 북마크 버튼으로 추가 또는 제거 가능
 
 __4. 레시피(조리 방법, 재료) 조회__
