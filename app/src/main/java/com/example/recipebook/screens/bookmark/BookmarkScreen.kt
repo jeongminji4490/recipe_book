@@ -1,4 +1,4 @@
-package com.example.recipebook.screens.wish
+package com.example.recipebook.screens.bookmark
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -18,9 +18,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.recipebook.BOOKMARK_SCREEN
 import com.example.recipebook.HOME_SCREEN
 import com.example.recipebook.R.string as AppText
-import com.example.recipebook.WISH_LIST_SCREEN
 import com.example.recipebook.common.composable.ChipComposable
 import com.example.recipebook.common.composable.Dialog
 import com.example.recipebook.common.composable.Toolbar
@@ -28,25 +28,25 @@ import com.example.recipebook.common.theme.*
 import com.example.recipebook.screens.recipe.RecipeViewModel
 
 @Composable
-fun WishListScreen(
+fun BookmarkScreen(
     openScreen: (String) -> Unit,
     openAndPopUp: (String, String) -> Unit
 ) {
     val viewModel : RecipeViewModel = hiltViewModel()
-    val wishList = viewModel.wishList
-    val wishKeyList = wishList.keys.toList() // 찜 목록의 key(레시피명) 리스트
+    val bookmarkList = viewModel.bookmarkList // 북마크한 레시피 목록
+    val wishKeyList = bookmarkList.keys.toList() // 북마크한 레시피 목록의 key(레시피명) 리스트
     val scrollState = rememberScrollState()
     var categoryValue by rememberSaveable { mutableStateOf("All") }
 
     LaunchedEffect(true){
-        wishList.clear()
-        viewModel.getWishList()
+        bookmarkList.clear()
+        viewModel.getBookmarkList()
     }
 
     Scaffold(
         topBar = {
             Toolbar(AppText.wish_list, Icons.Filled.ArrowBack) {
-                openAndPopUp(HOME_SCREEN, WISH_LIST_SCREEN) }
+                openAndPopUp(HOME_SCREEN, BOOKMARK_SCREEN) }
         }
     ) {
         Column(
@@ -61,23 +61,24 @@ fun WishListScreen(
                     .padding(15.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // 카테고리 생성
                 categories.forEach { category ->
                     ChipComposable(category) { categoryValue = category }
                     Spacer(Modifier.width(5.dp))
                 }
             }
-            wishKeyList.let { // 찜 목록 조회
+            wishKeyList.let { // 북마크 목록 조회
                 LazyColumn {
                     items(it) { name ->
-                        val ingredients = wishList[name]?.get(0) // 재료
-                        val category = wishList[name]?.get(1) // 카테고리
+                        val ingredients = bookmarkList[name]?.get(0) // 재료
+                        val category = bookmarkList[name]?.get(1) // 카테고리
                         if (categoryValue == "All") { // 모두 조회
                             if (ingredients != null && category != null)
-                                WishListCard(name, ingredients, category, openScreen)
+                                BookmarkCard(name, ingredients, category, openScreen)
                         }else { // 카테고리별 조회
                             if (category == categoryValue){
                                 if (ingredients != null)
-                                    WishListCard(name, ingredients, category, openScreen)
+                                    BookmarkCard(name, ingredients, category, openScreen)
                             }
                         }
                     }
@@ -88,7 +89,7 @@ fun WishListScreen(
 }
 
 @Composable
-fun WishListCard(
+fun BookmarkCard(
     name: String,
     ingredients: String,
     type: String,
@@ -135,10 +136,10 @@ fun WishListCard(
                 IconButton( // 북마크
                     onClick = {
                         pickState.value = !pickState.value
-                        if (pickState.value){
-                            viewModel.addWishRecipe(name, ingredients, type)
-                        }else {
-                            viewModel.deleteWishRecipe(name)
+                        if (pickState.value){ // 북마크 추가
+                            viewModel.addBookmarkRecipe(name, ingredients, type)
+                        }else { // 북마크 해제
+                            viewModel.deleteBookmarkRecipe(name)
                         } },
                 ) {
                     Icon(
@@ -172,4 +173,4 @@ fun WishListCard(
 
 val categories = listOf("All", "밥", "국&찌개", "반찬", "일품", "후식")
 
-const val TAG = "WishListScreen"
+const val TAG = "BookmarkScreen"

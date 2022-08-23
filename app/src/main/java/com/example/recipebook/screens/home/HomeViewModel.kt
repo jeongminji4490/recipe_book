@@ -25,6 +25,7 @@ class HomeViewModel @Inject constructor(
         accountService.deleteAccount(context, openAndPopUp)
     }
 
+    // 클릭한 레시피 종류에 해당하는 레시피 목록 화면으로 이동
     fun setRecipeType(recipeType: String, openAndPopUp: (String, String) -> Unit) {
         viewModelScope.launch {
             dataStore.setRecipeType(recipeType)

@@ -36,8 +36,8 @@ class RepositoryImpl @Inject constructor(
         }
     }
 
-    // 로그인한 사용자의 찜목록 조회
-    override suspend fun getWishList() = callbackFlow {
+    // 북마크한 레시피 목록 조회
+    override suspend fun getBookmarkList() = callbackFlow {
         val recipe = mutableMapOf<String, String>()
         val currentUser = Firebase.auth.currentUser
         val docName = currentUser?.email.toString()
@@ -49,9 +49,9 @@ class RepositoryImpl @Inject constructor(
             .addOnSuccessListener { docs -> // 문서 조회 성공
                 for (doc in docs){
                     if (doc.id != "sample"){ // sample 문서는 제외
-                        recipe["name"] = doc.id
-                        recipe["ingredients"] = doc.get("ingredients").toString()
-                        recipe["type"] = doc.get("type").toString()
+                        recipe["name"] = doc.id // 레시피명
+                        recipe["ingredients"] = doc.get("ingredients").toString() // 재료
+                        recipe["type"] = doc.get("type").toString() // 종류
                         trySend(recipe)
                     }
                 }
@@ -63,13 +63,13 @@ class RepositoryImpl @Inject constructor(
         awaitClose()
     }
 
-    // 로그인한 사용자의 찜목록에 레시피 추가
-    override fun addWishRecipe(name: String, ingredients: String, type: String) {
+    // 북마크한 레시피 목록에 레시피 추가
+    override fun addBookmarkRecipe(name: String, ingredients: String, type: String) {
         val currentUser = Firebase.auth.currentUser
         val docName = currentUser?.email.toString()
         val db = Firebase.firestore
 
-        // 하위 컬렉션에서 name 문서 생성
+        // 하위 컬렉션에서 레시피명으로 문서 생성
         val docRef = db.collection("user").document(docName)
             .collection("wish list").document(name)
         val data = hashMapOf(
@@ -84,16 +84,16 @@ class RepositoryImpl @Inject constructor(
             }
     }
 
-    // 로그인한 사용자의 찜목록에서 레시피 삭제
-    override fun deleteWishRecipe(name: String) {
+    // 북마크한 레시피 목록에서 레시피 삭제
+    override fun deleteBookmarkRecipe(name: String) {
         val currentUser = Firebase.auth.currentUser
         val db = Firebase.firestore
         val docRef = db.collection("user").document(currentUser?.email.toString())
-            .collection("wish list").document(name)
+            .collection("wish list").document(name) // 레시피명에 해당하는 문서 삭제
         docRef.delete()
     }
 
-    // 레시피 조회
+    // 특정 레시피 정보 조회
     override suspend fun getRecipe(name: String): Flow<RecipeList?> = flow {
         try {
             val response = recipeService.getRecipe(keyId, serviceId, dataType, name)

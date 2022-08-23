@@ -9,12 +9,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.recipebook.screens.bookmark.BookmarkScreen
 import com.example.recipebook.screens.home.HomeScreen
 import com.example.recipebook.screens.login.LoginScreen
 import com.example.recipebook.screens.recipe.*
 import com.example.recipebook.screens.profile.EditProfileScreen
 import com.example.recipebook.screens.signup.SignUpScreen
-import com.example.recipebook.screens.wish.WishListScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -53,8 +53,8 @@ class MainActivity : AppCompatActivity() {
                 HomeScreen(
                     openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
             }
-            composable(WISH_LIST_SCREEN){
-                WishListScreen(
+            composable(BOOKMARK_SCREEN){
+                BookmarkScreen(
                     openScreen = { route -> appState.navigate(route) },
                     openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
             }

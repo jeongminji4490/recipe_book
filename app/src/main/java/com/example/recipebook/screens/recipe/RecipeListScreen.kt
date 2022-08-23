@@ -32,12 +32,12 @@ fun RecipeListScreen(
     openAndPopUp: (String, String) -> Unit
 ) {
     val recipeList = viewModel.recipeList
-    val wishList = viewModel.wishList
+    val wishList = viewModel.bookmarkList
     val category = viewModel.category
 
     LaunchedEffect(true) {
         viewModel.getRecipeList()
-        viewModel.getWishList()
+        viewModel.getBookmarkList()
         viewModel.getRecipeType()
     }
 
@@ -61,7 +61,7 @@ fun RecipeListScreen(
                     items(it.list.recipes) { recipe ->
                         if (recipe.type == category.value) { // 홈화면에서 선택한 카테고리(ex 밥)와 종류가 같은 레시피만 리스트업
                             wishList.keys.forEach { wishName ->
-                                if (recipe.name == wishName) { // 찜한 레시피라면 북마크 표시
+                                if (recipe.name == wishName) { // 북마크한 레시피라면 북마크 표시
                                     wishValue = true
                                     return@forEach
                                 }
@@ -99,10 +99,10 @@ fun RecipeCard(
             IconButton( // 북마크
                 onClick = {
                     pickState.value = !pickState.value
-                    if (pickState.value) {
-                        viewModel.addWishRecipe(data.name, data.ingredient, data.type)
-                    } else {
-                        viewModel.deleteWishRecipe(data.name)
+                    if (pickState.value) { // 북마크 추가
+                        viewModel.addBookmarkRecipe(data.name, data.ingredient, data.type)
+                    } else { // 북마크 해제
+                        viewModel.deleteBookmarkRecipe(data.name)
                     }
                 },
             ) {
