@@ -6,7 +6,7 @@ const val SIGNUP_SCREEN = "SignScreen"
 
 const val HOME_SCREEN = "HomeScreen"
 
-const val WISH_LIST_SCREEN = "WishListScreen"
+const val BOOKMARK_SCREEN = "BookmarkScreen"
 
 const val EDIT_PROFILE_SCREEN = "EditProfileScreen"
 

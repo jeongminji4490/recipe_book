@@ -11,6 +11,7 @@ class ProfileViewModel  @Inject constructor(
     private val accountService: AccountService
 ): ViewModel() {
 
+    // 프로필 수정
     fun editProfile(
         context: Context,
         name: String,

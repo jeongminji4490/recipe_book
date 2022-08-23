@@ -21,7 +21,7 @@ class RecipeViewModel @Inject constructor(
 ) : ViewModel() {
 
     var recipeList: MutableState<RecipeList?> = mutableStateOf(null) // 레시피 목록
-    var wishList = mutableStateMapOf<String, List<String>>() // 찜 목록
+    var bookmarkList = mutableStateMapOf<String, List<String>>() // 북마크한 레시피 목록
     var recipe: MutableState<Recipe?> = mutableStateOf(null) // 레시피
     var category: MutableState<String> = mutableStateOf("") // 레시피 종류
 
@@ -33,11 +33,11 @@ class RecipeViewModel @Inject constructor(
         }
     }
 
-    suspend fun getWishList() { // 찜한 레시피 목록 조회
+    suspend fun getBookmarkList() { // 북마크한 레시피 목록 조회
         viewModelScope.launch {
-            service.getWishList().collect() {
+            service.getBookmarkList().collect() {
                 if (it != null) {
-                    wishList[it["name"].toString()] =
+                    bookmarkList[it["name"].toString()] =
                         listOf(it["ingredients"].toString(), it["type"].toString())
                 }
             }
@@ -48,9 +48,9 @@ class RecipeViewModel @Inject constructor(
     fun getRecipe() { // 레시피 조회
         viewModelScope.launch {
             val name = dataStore.recipeName.first()
-            val newString = name.replace(" ", "_")
+            val newString = name.replace(" ", "_") // 레시피명에서 공백은 '_'로 처리해야함
             var convertedName = newString
-            if (newString.contains("_&"))
+            if (newString.contains("_&")) // '&'이 포함된 레시피명은 '&'이전 문자열만으로 조회 가능
                 convertedName = newString.split("_&")[0]
 
             service.getRecipe(convertedName).collect() {
@@ -61,12 +61,12 @@ class RecipeViewModel @Inject constructor(
         }
     }
 
-    fun addWishRecipe(name: String, ingredients: String, type: String) { // 레시피 찜목록에 추가
-        service.addWishRecipe(name, ingredients, type)
+    fun addBookmarkRecipe(name: String, ingredients: String, type: String) { // 북마크한 레시피 목록에 레시피 추가
+        service.addBookmarkRecipe(name, ingredients, type)
     }
 
-    fun deleteWishRecipe(name: String) { // 레시피 찜목록에서 삭제
-        service.deleteWishRecipe(name)
+    fun deleteBookmarkRecipe(name: String) { // 북마크한 레시피 목록에서 레시피 삭제
+        service.deleteBookmarkRecipe(name)
     }
 
     fun getRecipeType() { // 레시피 종류 조회

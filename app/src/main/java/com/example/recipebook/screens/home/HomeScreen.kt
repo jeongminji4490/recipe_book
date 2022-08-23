@@ -164,7 +164,7 @@ fun HomeContent(
                 modifier = Modifier
                     .width(100.dp)
                     .height(100.dp)
-                    .clickable { openAndPopUp(WISH_LIST_SCREEN, HOME_SCREEN) },
+                    .clickable { openAndPopUp(BOOKMARK_SCREEN, HOME_SCREEN) },
                 backgroundColor = Beige,
                 border = BorderStroke(2.dp, Navy),
                 shape = RoundedCornerShape(10.dp)
