@@ -43,7 +43,7 @@ __1. Sign up & Sign in__
 </p>
 
 + Using Firebase Authentication
-+ Users can Sign up & Sign in with their email and password
++ Users can sign up & sign in with their email and password
 
 __2. Home screen__
 <p align="center">
@@ -54,7 +54,7 @@ __2. Home screen__
 
 + Users can view the recipes by categories
 + Users can view the recipes they bookmarked
-+ Users can edit your personal information, sign out, and withdraw your account by clicking the menu button at the top
++ Users can edit their personal information, sign out, and withdraw account by clicking the menu button at the top
 
 __3. Edit personal information__
 <p align="center">
